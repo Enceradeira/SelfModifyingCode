@@ -1,0 +1,2 @@
+class RejectedError < StandardError
+end
