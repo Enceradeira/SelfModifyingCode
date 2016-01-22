@@ -22,6 +22,7 @@ class Program
       [build_key(r[1], r[2]), Transition.new(new_symbol, direction, r[5])]
     end
     @table = Hash[transitions]
+    @source = source
   end
 
   def build_key(state, input)
@@ -32,5 +33,9 @@ class Program
   def get_transition(state, input)
     key = build_key(state, input)
     @table[key]
+  end
+
+  def to_source
+    @source
   end
 end
