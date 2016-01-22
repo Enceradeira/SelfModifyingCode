@@ -18,25 +18,25 @@ describe Machine do
       context 'and input is valid' do
         before { machine.execute }
         context 'and input 00' do
-          let(:tape) { Tape.new [0, 0] }
+          let(:tape) { Tape.new %w(0 0) }
           it 'calculates 0' do
             expect(tape.to_a).to eq(['0'])
           end
         end
         context 'when input 01' do
-          let(:tape) { Tape.new [0, 1] }
+          let(:tape) { Tape.new %w(0 1) }
           it 'calculates 0' do
             expect(tape.to_a).to eq(['0'])
           end
         end
         context 'when input 11' do
-          let(:tape) { Tape.new [1, 1] }
+          let(:tape) { Tape.new %w(1 1) }
           it 'calculates 1' do
             expect(tape.to_a).to eq(['1'])
           end
         end
         context 'when input 10' do
-          let(:tape) { Tape.new [1, 0] }
+          let(:tape) { Tape.new %w(1 0) }
           it 'calculates 0' do
             expect(tape.to_a).to eq(['0'])
           end
