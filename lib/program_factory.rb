@@ -25,10 +25,10 @@ class ProgramFactory
       program = Program.new(%w(
         init,0->,r,false
         init,1->,r,undecided
-        false,0->0,-,accept
-        false,1->0,-,accept
-        undecided,0->0,-,accept
-        undecided,1->1,-,accept))
+        false,0->0,,accept
+        false,1->0,,accept
+        undecided,0->0,,accept
+        undecided,1->1,,accept))
     end
 
     program.to_source

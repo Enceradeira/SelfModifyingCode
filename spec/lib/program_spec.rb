@@ -34,8 +34,8 @@ describe Program do
       end
     end
   end
-  context "when source ['I,1->1,-,1']" do
-    let(:source) { ['I,1->1,-,1'] }
+  context "when source ['I,1->1,,1']" do
+    let(:source) { ['I,1->1,,1'] }
     describe 'to_source' do
       it { expect(program.to_source).to eq(source) }
     end

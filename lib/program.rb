@@ -5,9 +5,12 @@ class Program
   def initialize(source)
     nk = '[^->,]' # all but keywords
     transitions = source.map do |t|
-      r = Regexp.new("(#{nk}*),(#{nk}*)->(#{nk}*),([r,l,-]{1}),(#{nk}*)").match(t)
+      r = Regexp.new("(#{nk}*),(#{nk}*)->(#{nk}*),([rl]?),(#{nk}*)").match(t)
+      if r.nil?
+        raise StandardError.new "invalid program: #{t}"
+      end
       direction_str = r[4]
-      if direction_str == '-'
+      if direction_str.empty?
         direction = nil
       else
         direction = direction_str.to_sym
