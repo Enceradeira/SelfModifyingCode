@@ -6,7 +6,7 @@ require_relative 'tape'
 class Machine
   class << self
     def execute(tape_content, source)
-      Machine.new(tape_content, Program.new(source)).execute
+      Machine.new(tape_content, Program.compile(source)).execute
     end
   end
 

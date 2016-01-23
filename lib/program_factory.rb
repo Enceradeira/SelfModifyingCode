@@ -1,5 +1,8 @@
 require_relative 'program'
 require_relative 'test_case'
+require_relative 'state_table'
+require_relative 'state_table_row'
+require_relative 'state_input'
 
 class ProgramFactory
   private
@@ -18,17 +21,18 @@ class ProgramFactory
         # variable
         size = 0
 
+    table = StateTable.new([
+                               StateTableRow.new(StateInput.new('init', '0'), Transition.new(nil, :r, 'false')),
+                               StateTableRow.new(StateInput.new('init', '1'), Transition.new(nil, :r, 'undecided')),
+                               StateTableRow.new(StateInput.new('false', '0'), Transition.new('0', nil, 'accept')),
+                               StateTableRow.new(StateInput.new('false', '1'), Transition.new('0', nil, 'accept')),
+                               StateTableRow.new(StateInput.new('undecided', '0'), Transition.new('0', nil, 'accept')),
+                               StateTableRow.new(StateInput.new('undecided', '1'), Transition.new('1', nil, 'accept'))])
 
-    table = Array.new(size)
-    program = Program.new(%w())
+
+    program = Program.compile(%w())
     until test_cases.all? { |c| c.passes_for?(program) } do
-      program = Program.new(%w(
-        init,0->,r,false
-        init,1->,r,undecided
-        false,0->0,,accept
-        false,1->0,,accept
-        undecided,0->0,,accept
-        undecided,1->1,,accept))
+      program = Program.new(table)
     end
 
     program.to_source

@@ -3,10 +3,10 @@ require_relative '../../lib/test_case'
 require_relative 'source_repository'
 
 describe TestCase do
-  let(:and_program){Program.new(SourceRepository.and)}
-  let(:or_program){Program.new(SourceRepository.or)}
-  let(:erase_program){Program.new(SourceRepository.erase_tape)}
-  let(:empty_program){Program.new(SourceRepository.empty)}
+  let(:and_program){Program.compile(SourceRepository.and)}
+  let(:or_program){Program.compile(SourceRepository.or)}
+  let(:erase_program){Program.compile(SourceRepository.erase_tape)}
+  let(:empty_program){Program.compile(SourceRepository.empty)}
   describe 'test' do
     context '0,1->1' do
       let(:test_case) { TestCase.new('0,1->1') }
