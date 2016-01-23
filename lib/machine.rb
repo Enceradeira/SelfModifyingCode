@@ -6,20 +6,24 @@ require_relative 'tape'
 class Machine
   class << self
     def execute(tape_content, source)
-      Machine.new(tape_content, source).execute
+      Machine.new(tape_content, Program.new(source)).execute
     end
   end
 
-  def initialize(tape_content, source)
+  def initialize(tape_content, program)
     @tape = Tape.new(tape_content)
     @head = @tape.create_head
-    @program = Program.new(source)
+    @program = program
     @state = 'init'
     @accept_state = 'accept'
   end
 
   def execute
     value = @head.read
+    if value.nil?
+      # tape finished
+      return
+    end
     transition = @program.get_transition(@state, value)
     if transition.nil?
       raise RejectedError.new

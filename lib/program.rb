@@ -3,7 +3,7 @@ require_relative 'transition'
 class Program
   private
   def initialize(source)
-    nk = '[^->]' # all but keywords
+    nk = '[^->,]' # all but keywords
     transitions = source.map do |t|
       r = Regexp.new("(#{nk}*),(#{nk}*)->(#{nk}*),([r,l,-]{1}),(#{nk}*)").match(t)
       direction_str = r[4]
@@ -31,8 +31,35 @@ class Program
 
   public
   def get_transition(state, input)
-    key = build_key(state, input)
-    @table[key]
+    exact_match = @table[build_key(state, input)]
+    any_state_match = @table[build_key('', input)]
+    any_input_match = @table[build_key(state, '')]
+    any_input_any_state_match = @table[build_key('', '')]
+
+    nr = 0
+    result = nil
+    unless exact_match.nil?
+      nr = nr +1
+      result =exact_match
+    end
+    unless any_state_match.nil?
+      nr = nr +1
+      result =any_state_match
+    end
+    unless any_input_match.nil?
+      nr = nr +1
+      result =any_input_match
+    end
+    unless any_input_any_state_match.nil?
+      nr = nr +1
+      result =any_input_any_state_match
+    end
+
+    if nr > 1
+      raise StandardError.new 'table is ambiguous'
+    end
+
+    result
   end
 
   def to_source
