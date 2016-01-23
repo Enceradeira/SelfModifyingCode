@@ -10,21 +10,21 @@ describe TestCase do
   describe 'test' do
     context '0,1->1' do
       let(:test_case) { TestCase.new('0,1->1') }
-      it { expect(test_case.test(and_program)).to be_falsey }
-      it { expect(test_case.test(or_program)).to be_truthy }
-      it { expect(test_case.test(empty_program)).to be_falsey }
+      it { expect(test_case.passes_for?(and_program)).to be_falsey }
+      it { expect(test_case.passes_for?(or_program)).to be_truthy }
+      it { expect(test_case.passes_for?(empty_program)).to be_falsey }
     end
     context '0,1->0' do
       let(:test_case) { TestCase.new('0,1->0') }
-      it { expect(test_case.test(and_program)).to be_truthy }
-      it { expect(test_case.test(erase_program)).to be_falsey }
-      it { expect(test_case.test(or_program)).to be_falsey }
+      it { expect(test_case.passes_for?(and_program)).to be_truthy }
+      it { expect(test_case.passes_for?(erase_program)).to be_falsey }
+      it { expect(test_case.passes_for?(or_program)).to be_falsey }
     end
     context 'A,C->' do
       let(:test_case) { TestCase.new('A,C->') }
-      it { expect(test_case.test(and_program)).to be_falsey }
-      it { expect(test_case.test(or_program)).to be_falsey }
-      it { expect(test_case.test(erase_program)).to be_truthy }
+      it { expect(test_case.passes_for?(and_program)).to be_falsey }
+      it { expect(test_case.passes_for?(or_program)).to be_falsey }
+      it { expect(test_case.passes_for?(erase_program)).to be_truthy }
     end
   end
 end

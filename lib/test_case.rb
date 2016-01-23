@@ -8,7 +8,7 @@ class TestCase
     @description = TestCaseDescription.parse(description)
   end
 
-  def test(program)
+  def passes_for?(program)
     machine = Machine.new(@description.input, program)
     begin
       result_tape = machine.execute

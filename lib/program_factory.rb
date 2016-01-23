@@ -21,7 +21,7 @@ class ProgramFactory
 
     table = Array.new(size)
     program = Program.new(%w())
-    until test_cases.all? { |c| c.test(program) } do
+    until test_cases.all? { |c| c.passes_for?(program) } do
       program = Program.new(%w(
         init,0->,r,false
         init,1->,r,undecided
