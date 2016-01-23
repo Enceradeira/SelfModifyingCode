@@ -1,4 +1,4 @@
-require_relative 'transition'
+require_relative 'state_transition'
 require_relative 'state_table'
 require_relative 'state_table_row'
 require_relative 'state_input'
@@ -42,7 +42,7 @@ class Program
           new_symbol = new_symbol_str
         end
 
-        StateTableRow.new(StateInput.new(r[1], r[2]), Transition.new(new_symbol, direction, r[5]))
+        StateTableRow.new(StateInput.new(r[1], r[2]), StateTransition.new(new_symbol, direction, r[5]))
       end)
       Program.new(table)
     end

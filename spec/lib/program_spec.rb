@@ -20,7 +20,7 @@ describe Program do
     describe 'get_transition' do
       context 'when state is I and input 1' do
         it 'returns (1,r,1)' do
-          expect(program.get_transition('I', 1)).to eq(Transition.new('1', :r, '1'))
+          expect(program.get_transition('I', 1)).to eq(StateTransition.new('1', :r, '1'))
         end
       end
       context 'when state is O and input 1' do
@@ -43,7 +43,7 @@ describe Program do
     describe 'get_transition' do
       context 'when state is I and input 1' do
         it 'returns (1,nil,1)' do
-          expect(program.get_transition('I', 1)).to eq(Transition.new('1', nil, '1'))
+          expect(program.get_transition('I', 1)).to eq(StateTransition.new('1', nil, '1'))
         end
       end
     end
@@ -56,7 +56,7 @@ describe Program do
     describe 'get_transition' do
       context 'when state is I and input 1' do
         it 'returns (nil,l,1)' do
-          expect(program.get_transition('I', 1)).to eq(Transition.new(nil, :l, '1'))
+          expect(program.get_transition('I', 1)).to eq(StateTransition.new(nil, :l, '1'))
         end
       end
     end
@@ -67,8 +67,8 @@ describe Program do
       it { expect(program.to_source).to eq(source) }
     end
     describe 'get_transition' do
-      it { expect(program.get_transition('I', 1)).to eq(Transition.new(nil, :r, 'continue')) }
-      it { expect(program.get_transition('A', 4)).to eq(Transition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('I', 1)).to eq(StateTransition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('A', 4)).to eq(StateTransition.new(nil, :r, 'continue')) }
     end
   end
   context "when source [,0->,r,continue']" do
@@ -77,8 +77,8 @@ describe Program do
       it { expect(program.to_source).to eq(source) }
     end
     describe 'get_transition' do
-      it { expect(program.get_transition('I', 0)).to eq(Transition.new(nil, :r, 'continue')) }
-      it { expect(program.get_transition('FR', 0)).to eq(Transition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('I', 0)).to eq(StateTransition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('FR', 0)).to eq(StateTransition.new(nil, :r, 'continue')) }
       it { expect(program.get_transition('B', 1)).to be_nil }
     end
   end
@@ -88,8 +88,8 @@ describe Program do
       it { expect(program.to_source).to eq(source) }
     end
     describe 'get_transition' do
-      it { expect(program.get_transition('1', 0)).to eq(Transition.new(nil, :r, 'continue')) }
-      it { expect(program.get_transition('1', 1)).to eq(Transition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('1', 0)).to eq(StateTransition.new(nil, :r, 'continue')) }
+      it { expect(program.get_transition('1', 1)).to eq(StateTransition.new(nil, :r, 'continue')) }
       it { expect(program.get_transition('Z', 1)).to be_nil }
     end
   end
