@@ -28,5 +28,19 @@ class SourceRepository
     def empty
       %w()
     end
+
+    def ambiguous_code
+      %w(
+        init,0->,r,accept
+        init,->,,false
+      )
+    end
+
+    def indefinite_recursion
+      %w(
+        init,->1,,false
+        false,1->1,,false
+      )
+    end
   end
 end

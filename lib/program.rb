@@ -74,7 +74,7 @@ class Program
     end
 
     if nr > 1
-      raise StandardError.new 'table is ambiguous'
+      raise SyntaxError.new 'table is ambiguous'
     end
 
     result

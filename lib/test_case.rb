@@ -12,9 +12,17 @@ class TestCase
     machine = Machine.new(@description.input, program)
     begin
       result_tape = machine.execute
-    rescue RejectedError
+    rescue RejectedError, SyntaxError, SystemStackError
       return false
     end
     result_tape == @description.expected_output
+  end
+
+  def input
+    @description.input
+  end
+
+  def expected_output
+    @description.expected_output
   end
 end

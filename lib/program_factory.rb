@@ -12,29 +12,51 @@ class ProgramFactory
 
     test_cases = test_cases_array.map { |t| TestCase.new(t) }
 
-    # fix
-    key_words = %w(, ->)
-    directions = %w(r l -)
-    default_states = %w(init accept)
-    input_symbols =
+    input_symbols = test_cases.map { |c| c.input }.flatten.uniq
+    output_symbols = test_cases.map { |c| c.expected_output }.flatten.uniq
 
-        # variable
-        size = 0
-
-    table = StateTable.new([
-                               StateTableRow.new(StateInput.new('init', '0'), StateTransition.new(nil, :r, 'false')),
-                               StateTableRow.new(StateInput.new('init', '1'), StateTransition.new(nil, :r, 'undecided')),
-                               StateTableRow.new(StateInput.new('false', '0'), StateTransition.new('0', nil, 'accept')),
-                               StateTableRow.new(StateInput.new('false', '1'), StateTransition.new('0', nil, 'accept')),
-                               StateTableRow.new(StateInput.new('undecided', '0'), StateTransition.new('0', nil, 'accept')),
-                               StateTableRow.new(StateInput.new('undecided', '1'), StateTransition.new('1', nil, 'accept'))])
-
-
-    program = Program.compile(%w())
+    table = init_table(input_symbols, output_symbols)
+    program = Program.new(table)
     until test_cases.all? { |c| c.passes_for?(program) } do
+      table = init_table(input_symbols, output_symbols)
       program = Program.new(table)
+      puts '-------'
+      puts program.to_source
+      puts '-------'
     end
 
     program.to_source
+  end
+
+  def init_table(input_symbols, output_symbols)
+    i = (input_symbols + [nil]).uniq
+    o = (output_symbols + [nil]).uniq
+
+    d = [:r, :l, nil]
+
+    states = %w(false undecided)
+    is = ['init'] + states
+    os = ['accept'] + states
+    nr_rows = 1
+
+    c = {}
+    StateTable.new([
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
+                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample))])
+  end
+
+  def build_uniq_state_input(i, is, hash)
+    loop do
+      state = is.sample
+      input = i.sample
+      key = "#{state};#{input}"
+      unless hash.has_key?(key)
+        return StateInput.new(state, input)
+      end
+    end
   end
 end
