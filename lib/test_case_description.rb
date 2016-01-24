@@ -1,8 +1,9 @@
 class TestCaseDescription < Struct.new(:input, :expected_output)
   class << self
     def parse(string)
-      sym = '[^->,]' # all but keywords
-      tape = "(#{sym}+(?:,#{sym}+)*)?"
+      split = ' '
+      sym = "[^->#{split}]" # all but keywords
+      tape = "(#{sym}+(?:#{split}#{sym}+)*)?"
       expr = "^#{tape}->#{tape}$"
       result = Regexp.new(expr).match(string)
       if result.nil?
@@ -15,13 +16,13 @@ class TestCaseDescription < Struct.new(:input, :expected_output)
       if input_as_str.nil?
         input = []
       else
-        input = input_as_str.split(',')
+        input = input_as_str.split(split)
       end
 
       if output_as_str.nil?
         expected_output = []
       else
-        expected_output = output_as_str.split(',')
+        expected_output = output_as_str.split(split)
       end
       TestCaseDescription.new(input, expected_output)
     end
