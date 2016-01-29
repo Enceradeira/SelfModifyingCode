@@ -2,6 +2,7 @@ require_relative 'rejected_error'
 require_relative 'head'
 require_relative 'program'
 require_relative 'tape'
+require_relative 'constants'
 
 class Machine
   class << self
@@ -14,8 +15,7 @@ class Machine
     @tape = Tape.new(tape_content)
     @head = @tape.create_head
     @program = program
-    @state = :init
-    @accept_state = :accept
+    @state = INIT_STATE
   end
 
   def execute
@@ -31,7 +31,7 @@ class Machine
     @head.write(transition.new_symbol)
     @head.move(transition.direction)
     @state = transition.new_state
-    unless @state == @accept_state
+    unless @state == ACCEPT_STATE
       execute
     end
     @tape.to_a

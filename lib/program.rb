@@ -31,7 +31,6 @@ class Program
 
   public
   class << self
-
     def compile(source)
       nk = '[^->,]' # all but keywords
       table = StateTable.new(source.map do |t|

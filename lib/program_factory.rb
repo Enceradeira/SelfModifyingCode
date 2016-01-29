@@ -34,11 +34,11 @@ class ProgramFactory
 
     d = [:r, :l, nil]
 
-    states = %w(false undecided)
+    states = %w(false undecided).map{|s| s.to_sym}
     nr_rows = 6
 
-    is = ['init'] + states
-    os = ['accept'] + states
+    is = [INIT_STATE] + states
+    os = [ACCEPT_STATE] + states
     c = {}
     StateTable.new(nr_rows.times.map { StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)) })
   end
