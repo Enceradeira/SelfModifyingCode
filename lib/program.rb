@@ -31,6 +31,10 @@ class Program
 
   public
   class << self
+    def create_random(nr_rows, nr_states, symbols)
+      Program.new(StateTable.create_random(nr_rows, nr_states, symbols))
+    end
+
     def compile(source)
       nk = '[^->,]' # all but keywords
       table = StateTable.new(source.map do |t|
@@ -51,7 +55,9 @@ class Program
           new_symbol = new_symbol_str
         end
 
-        StateTableRow.new(StateInput.new(to_sym_or_nil(r[1]), to_sym_or_nil(r[2])), StateTransition.new(to_sym_or_nil(new_symbol), to_sym_or_nil(direction), to_sym_or_nil(r[5])))
+        state_input = StateInput.new(to_sym_or_nil(r[1]), to_sym_or_nil(r[2]))
+        transition = [to_sym_or_nil(new_symbol), to_sym_or_nil(direction), to_sym_or_nil(r[5])]
+        StateTableRow.new(state_input, StateTransition.new(*transition))
       end)
       Program.new(table)
     end
