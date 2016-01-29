@@ -3,6 +3,7 @@ require_relative 'test_case'
 require_relative 'state_table'
 require_relative 'state_table_row'
 require_relative 'state_input'
+require_relative 'symbols'
 
 class ProgramFactory
   private
@@ -11,15 +12,11 @@ class ProgramFactory
   def build(test_cases_array)
 
     test_cases = test_cases_array.map { |t| TestCase.new(t) }
+    symbols = Symbols.new(test_cases)
 
-    input_symbols = test_cases.map { |c| c.input }.flatten.uniq
-    output_symbols = test_cases.map { |c| c.expected_output }.flatten.uniq
-
-    table = init_table(input_symbols, output_symbols)
-    program = Program.new(table)
+    program = create_program(symbols)
     until test_cases.all? { |c| c.passes_for?(program) } do
-      table = init_table(input_symbols, output_symbols)
-      program = Program.new(table)
+      program = Program.new(init_table(symbols))
       puts '-------'
       puts program.to_source
       puts '-------'
@@ -28,19 +25,25 @@ class ProgramFactory
     program.to_source
   end
 
-  def init_table(input_symbols, output_symbols)
-    i = (input_symbols + [nil]).uniq
-    o = (output_symbols + [nil]).uniq
+  def create_program(symbols)
+    table = init_table(symbols)
+    Program.new(table)
+  end
 
-    d = [:r, :l, nil]
-
-    states = %w(false undecided).map{|s| s.to_sym}
+  def init_table(symbols)
+    nr_states = 2
     nr_rows = 6
 
+    states = nr_states.times.map{|s| s.to_s.to_sym}
     is = [INIT_STATE] + states
     os = [ACCEPT_STATE] + states
     c = {}
-    StateTable.new(nr_rows.times.map { StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)) })
+    rows = nr_rows.times.map do
+      state_input = build_uniq_state_input(symbols.for_input, is, c)
+      transition = StateTransition.new(symbols.for_output.sample, DIRECTIONS.sample, os.sample)
+      StateTableRow.new(state_input, transition)
+    end
+    StateTable.new(rows)
   end
 
   def build_uniq_state_input(i, is, hash)
