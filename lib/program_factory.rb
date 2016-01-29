@@ -35,18 +35,12 @@ class ProgramFactory
     d = [:r, :l, nil]
 
     states = %w(false undecided)
+    nr_rows = 6
+
     is = ['init'] + states
     os = ['accept'] + states
-    nr_rows = 1
-
     c = {}
-    StateTable.new([
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)),
-                       StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample))])
+    StateTable.new(nr_rows.times.map { StateTableRow.new(build_uniq_state_input(i, is, c), StateTransition.new(o.sample, d.sample, os.sample)) })
   end
 
   def build_uniq_state_input(i, is, hash)
