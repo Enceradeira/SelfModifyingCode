@@ -1,0 +1,2 @@
+class ResourceExceededError < StandardError
+end

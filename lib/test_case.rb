@@ -8,8 +8,8 @@ class TestCase
     @description = TestCaseDescription.parse(description)
   end
 
-  def passes_for?(program)
-    machine = Machine.new(@description.input, program)
+  def passes_for?(program, resources)
+    machine = Machine.new(@description.input, program, resources)
     begin
       result_tape = machine.execute
     rescue RejectedError, SyntaxError, SystemStackError

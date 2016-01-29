@@ -6,12 +6,13 @@ require_relative 'constants'
 
 class Machine
   class << self
-    def execute(tape_content, source)
-      Machine.new(tape_content, Program.compile(source)).execute
+    def execute(tape_content, source, resources)
+      Machine.new(tape_content, Program.compile(source), resources).execute
     end
   end
 
-  def initialize(tape_content, program)
+  def initialize(tape_content, program, resources)
+    @resources = resources
     @tape = Tape.new(tape_content)
     @head = @tape.create_head
     @program = program
@@ -19,6 +20,7 @@ class Machine
   end
 
   def execute
+    @resources.consume_machine_cycle
     value = @head.read
     if value.nil?
       # tape finished
