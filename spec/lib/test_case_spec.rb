@@ -11,9 +11,12 @@ describe TestCase do
   let(:empty_program) { Program.compile(SourceRepository.empty) }
   let(:ambiguous_program) { Program.compile(SourceRepository.ambiguous_code) }
   let(:indefinite_recursion_program) { Program.compile(SourceRepository.indefinite_recursion) }
+  let(:resources) { Resources.new { |r|
+    r.machine_cycles = machine_cycles
+    r.machine_cycles_per_execution = 1000 } }
   describe 'test' do
-    context 'when resources available' do
-      let(:resources) { Resources.new { |r| r.machine_cycles = UNLIMITED_MACHINE_CYCLES } }
+    context 'when unlimited machine cycles available' do
+      let(:machine_cycles) { UNLIMITED_MACHINE_CYCLES }
       context '0 1->1' do
         let(:test_case) { TestCase.new('0 1->1') }
         it { expect(test_case.passes_for?(and_program, resources)).to be_falsey }
@@ -35,8 +38,8 @@ describe TestCase do
         it { expect(test_case.passes_for?(erase_program, resources)).to be_truthy }
       end
     end
-    context 'when no resources available' do
-      let(:resources) { Resources.new { |r| r.machine_cycles = 5 } }
+    context 'when 5 machine_cycles available' do
+      let(:machine_cycles) { 5 }
       context '0 1->1' do
         let(:test_case) { TestCase.new('0 1->1') }
         it { expect(lambda { test_case.passes_for?(indefinite_recursion_program, resources) }).to raise_error(ResourceExceededError) }

@@ -5,7 +5,10 @@ require_relative '../../lib/resources'
 
 describe ProgramFactory do
   let(:factory) { ProgramFactory.new(resources) }
-  let(:resources) { Resources.new { |r| r.machine_cycles = 1000000 } }
+  let(:resources) { Resources.new { |r|
+    r.machine_cycles = 1000000
+    r.machine_cycles_per_execution = 1000
+  } }
   describe 'build' do
 
     it 'constructs AND program' do

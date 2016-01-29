@@ -5,12 +5,6 @@ require_relative 'tape'
 require_relative 'constants'
 
 class Machine
-  class << self
-    def execute(tape_content, source, resources)
-      Machine.new(tape_content, Program.compile(source), resources).execute
-    end
-  end
-
   def initialize(tape_content, program, resources)
     @resources = resources
     @tape = Tape.new(tape_content)
@@ -19,23 +13,39 @@ class Machine
     @state = INIT_STATE
   end
 
-  def execute
-    @resources.consume_machine_cycle
+  private
+  def execute_cycle(cycles)
+    cycles.allocate_one
+
     value = @head.read
     if value.nil?
       # tape finished
-      return
+      @state = ACCEPT_STATE
+    else
+      transition = @program.get_transition(@state, value)
+      if transition.nil?
+        raise RejectedError.new
+      end
+      @head.write(transition.new_symbol)
+      @head.move(transition.direction)
+      @state = transition.new_state
     end
-    transition = @program.get_transition(@state, value)
-    if transition.nil?
-      raise RejectedError.new
-    end
-    @head.write(transition.new_symbol)
-    @head.move(transition.direction)
-    @state = transition.new_state
-    unless @state == ACCEPT_STATE
-      execute
+  end
+
+  public
+  def execute
+    cycles = @resources.create_machine_cycles
+
+    while @state != ACCEPT_STATE
+      execute_cycle(cycles)
     end
     @tape.to_a
   end
+
+  class << self
+    def execute(tape_content, source, resources)
+      Machine.new(tape_content, Program.compile(source), resources).execute
+    end
+  end
+
 end

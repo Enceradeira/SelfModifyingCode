@@ -2,6 +2,7 @@ require_relative 'test_case_description'
 require_relative 'machine'
 require_relative 'tape'
 require_relative 'rejected_error'
+require_relative 'machine_cycles_per_execution_exceeded'
 
 class TestCase
   def initialize(description)
@@ -12,7 +13,7 @@ class TestCase
     machine = Machine.new(@description.input, program, resources)
     begin
       result_tape = machine.execute
-    rescue RejectedError, SyntaxError, SystemStackError
+    rescue RejectedError, SyntaxError, MachineCyclesPerExecutionExceeded
       return false
     end
     result_tape == @description.expected_output

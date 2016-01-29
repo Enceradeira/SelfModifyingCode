@@ -1,0 +1,4 @@
+require_relative 'resource_exceeded_error'
+
+class MachineCyclesPerExecutionExceeded < ResourceExceededError
+end
