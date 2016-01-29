@@ -24,7 +24,7 @@ class TestCaseDescription < Struct.new(:input, :expected_output)
       else
         expected_output = output_as_str.split(split)
       end
-      TestCaseDescription.new(input, expected_output)
+      TestCaseDescription.new(input.map { |s| s.to_sym }, expected_output.map { |s| s.to_sym })
     end
   end
 end

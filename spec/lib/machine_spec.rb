@@ -7,18 +7,18 @@ describe Machine do
   let(:machine) { Machine.new(tape, program) }
   context 'and' do
     let(:program) { SourceRepository.and }
-    it { expect(Machine.execute(%w(0 0), program)).to eq(%w(0)) }
-    it { expect(Machine.execute(%w(0 1), program)).to eq(%w(0)) }
-    it { expect(Machine.execute(%w(1 0), program)).to eq(%w(0)) }
-    it { expect(Machine.execute(%w(1 1), program)).to eq(%w(1)) }
+    it { expect(Machine.execute(%w(0 0), program)).to eq([:'0']) }
+    it { expect(Machine.execute(%w(0 1), program)).to eq([:'0']) }
+    it { expect(Machine.execute(%w(1 0), program)).to eq([:'0']) }
+    it { expect(Machine.execute(%w(1 1), program)).to eq([:'1']) }
   end
 
   context 'or' do
     let(:program) { SourceRepository.or }
-    it { expect(Machine.execute(%w(0 0), program)).to eq(%w(0)) }
-    it { expect(Machine.execute(%w(0 1), program)).to eq(%w(1)) }
-    it { expect(Machine.execute(%w(1 0), program)).to eq(%w(1)) }
-    it { expect(Machine.execute(%w(1 1), program)).to eq(%w(1)) }
+    it { expect(Machine.execute(%w(0 0), program)).to eq([:'0']) }
+    it { expect(Machine.execute(%w(0 1), program)).to eq([:'1']) }
+    it { expect(Machine.execute(%w(1 0), program)).to eq([:'1']) }
+    it { expect(Machine.execute(%w(1 1), program)).to eq([:'1']) }
   end
 
   context 'erase_tape' do

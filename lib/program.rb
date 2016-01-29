@@ -19,9 +19,19 @@ class Program
     "#{state};#{input}".to_sym
   end
 
-  public
 
   class << self
+    def to_sym_or_nil(string)
+      unless string.nil?
+        return string.to_sym
+      end
+      nil
+    end
+  end
+
+  public
+  class << self
+
     def compile(source)
       nk = '[^->,]' # all but keywords
       table = StateTable.new(source.map do |t|
@@ -42,7 +52,7 @@ class Program
           new_symbol = new_symbol_str
         end
 
-        StateTableRow.new(StateInput.new(r[1], r[2]), StateTransition.new(new_symbol, direction, r[5]))
+        StateTableRow.new(StateInput.new(to_sym_or_nil(r[1]), to_sym_or_nil(r[2])), StateTransition.new(to_sym_or_nil(new_symbol), to_sym_or_nil(direction), to_sym_or_nil(r[5])))
       end)
       Program.new(table)
     end

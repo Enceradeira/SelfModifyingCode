@@ -14,8 +14,8 @@ class Machine
     @tape = Tape.new(tape_content)
     @head = @tape.create_head
     @program = program
-    @state = 'init'
-    @accept_state = 'accept'
+    @state = :init
+    @accept_state = :accept
   end
 
   def execute

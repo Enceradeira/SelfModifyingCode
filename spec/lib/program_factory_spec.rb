@@ -14,12 +14,12 @@ describe ProgramFactory do
       ]
 
       source = factory.build(test_cases)
-      expect(Machine.execute(%w(0 0), source)).to eq(['0'])
-      expect(Machine.execute(%w(1 0), source)).to eq(['0'])
-      expect(Machine.execute(%w(0 1), source)).to eq(['0'])
-      expect(Machine.execute(%w(1 1), source)).to eq(['1'])
+      expect(Machine.execute(%w(0 0), source)).to eq([:'0'])
+      expect(Machine.execute(%w(1 0), source)).to eq([:'0'])
+      expect(Machine.execute(%w(0 1), source)).to eq([:'0'])
+      expect(Machine.execute(%w(1 1), source)).to eq([:'1'])
     end
-    it 'constructs addition program' do
+    xit 'constructs addition program' do
       test_cases = [
           '0 0 0 0->0 0 0',
           '0 0 0 1->0 0 1',

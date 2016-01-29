@@ -27,7 +27,7 @@ class Tape
     end
 
     cells = content.map do |c|
-      Cell.new(c)
+      Cell.new(c.to_sym)
     end
 
     prev_cells = [nil] + cells
