@@ -20,8 +20,10 @@ class StateTable
     end
 
     public
+    def create_random(symbols)
+      nr_states = 1
+      nr_rows = 1
 
-    def create_random(nr_rows, nr_states, symbols)
       states = nr_states.times.map { |s| s.to_s.to_sym }
       is = [INIT_STATE] + states
       os = [ACCEPT_STATE] + states
@@ -33,5 +35,10 @@ class StateTable
       end
       StateTable.new(rows)
     end
+  end
+
+  public
+  def mutate(symbols)
+
   end
 end

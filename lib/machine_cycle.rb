@@ -2,6 +2,8 @@ require_relative 'resource_exceeded_error'
 require_relative 'constants'
 
 class MachineCycle
+  attr_reader :cycles
+
   def initialize(cycles)
     @cycles = cycles
   end

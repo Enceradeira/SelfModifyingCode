@@ -12,7 +12,8 @@ class Program
 
       [build_key(state_input.state, state_input.symbol), transition]
     end
-    @table = Hash[transitions]
+    @transitions = Hash[transitions]
+    @table = table
   end
 
   def build_key(state, input)
@@ -31,8 +32,8 @@ class Program
 
   public
   class << self
-    def create_random(nr_rows, nr_states, symbols)
-      Program.new(StateTable.create_random(nr_rows, nr_states, symbols))
+    def create_random(symbols)
+      Program.new(StateTable.create_random(symbols))
     end
 
     def compile(source)
@@ -63,11 +64,15 @@ class Program
     end
   end
 
+  def mutate(symbols)
+    Program.new(@table.mutate(symbols))
+  end
+
   def get_transition(state, input)
-    exact_match = @table[build_key(state, input)]
-    any_state_match = @table[build_key('', input)]
-    any_input_match = @table[build_key(state, '')]
-    any_input_any_state_match = @table[build_key('', '')]
+    exact_match = @transitions[build_key(state, input)]
+    any_state_match = @transitions[build_key('', input)]
+    any_input_match = @transitions[build_key(state, '')]
+    any_input_any_state_match = @transitions[build_key('', '')]
 
     nr = 0
     result = nil
@@ -96,7 +101,7 @@ class Program
   end
 
   def to_source
-    @table.map do |kv|
+    @transitions.map do |kv|
       state_input = kv[0].to_s().split(';')
       transition = kv[1]
       "#{state_input[0]},#{state_input[1]}->#{transition.new_symbol},#{transition.direction},#{transition.new_state}"
