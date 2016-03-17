@@ -1,7 +1,7 @@
-require_relative 'state_transition'
-require_relative 'state_table'
-require_relative 'state_table_row'
-require_relative 'state_input'
+require_relative 'state_table/state_transition'
+require_relative 'state_table/state_table'
+require_relative 'state_table/state_table_row'
+require_relative 'state_table/state_input'
 
 class Program
   private
@@ -32,10 +32,6 @@ class Program
 
   public
   class << self
-    def create_random(symbols)
-      Program.new(StateTable.create_random(symbols))
-    end
-
     def compile(source)
       nk = '[^->,]' # all but keywords
       table = StateTable.new(source.map do |t|

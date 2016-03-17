@@ -20,7 +20,7 @@ class StateTable
     end
 
     public
-    def create_random(symbols)
+    def create_random2(symbols)
       nr_states = 1
       nr_rows = 1
 
@@ -35,10 +35,5 @@ class StateTable
       end
       StateTable.new(rows)
     end
-  end
-
-  public
-  def mutate(symbols)
-
   end
 end

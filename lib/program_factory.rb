@@ -1,6 +1,7 @@
 require_relative 'program'
 require_relative 'test_case'
 require_relative 'symbols'
+require_relative 'state_table/chromosome'
 
 class ProgramFactory
   def initialize(resources)
@@ -13,12 +14,14 @@ class ProgramFactory
     test_cases = test_cases_array.map { |t| TestCase.new(t) }
     symbols = Symbols.new(test_cases)
 
-    program = Program.create_random(symbols)
+    chromosome  = Chromosome.create
+    program = Program.new(StateTable.new(chromosome.decode))
 
     nr = test_cases.count
     nr_ok = test_cases.count { |c| c.passes_for?(program, @resources) }
     until nr_ok == nr do
-      program = program.mutate(symbols)
+
+      program  = Program.new(StateTable.new(chromosome.mutate))
       nr_ok = test_cases.count { |c| c.passes_for?(program, @resources) }
     end
 
