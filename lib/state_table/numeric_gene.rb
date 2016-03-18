@@ -1,10 +1,12 @@
+require_relative 'randomizer'
+
 class NumericGene
   def initialize(max)
     @max = max
   end
 
   def value
-    @value ||= Random.rand(@max + 1)
+    @value ||= Randomizer.rand(@max)
   end
 
   def mutate
