@@ -22,7 +22,7 @@ class Chromosome< Struct.new(
   end
 
   def decode
-    self.rows_gene.rows
+    self.rows_gene.decode
   end
 
   def mutate

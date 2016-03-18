@@ -8,8 +8,12 @@ class StateTableRowsGeneStub
   end
 
   public
-  def mutate()
+  def mutate
     StateTableRowsGeneStub.new(@mutated_rows, @mutated_rows)
+  end
+
+  def decode
+    @rows.map { |r| r.decode }
   end
 
   def ==(other)

@@ -1,16 +1,8 @@
-class StateTableRow
-  attr_reader :state_input
-  attr_reader :transition
-
+class StateTableRow  < Struct.new(:state_input, :transition)
   private
   def initialize(state_input, transition)
-    @state_input = state_input
-    @transition = transition
+    self.state_input = state_input
+    self.transition = transition
   end
 
-  public
-  def ==(other)
-    @state_input==other.state_input && @transition==other.transition
-  end
-  alias_method :eql?, :==
 end

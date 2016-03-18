@@ -1,6 +1,7 @@
 require 'rspec'
 require_relative 'numeric_gene_stub'
 require_relative 'state_table_rows_gene_stub'
+require_relative 'state_table_row_gene_stub'
 require_relative '../../../lib/state_table/state_table_row'
 require_relative '../../../lib/state_table/state_input'
 require_relative '../../../lib/state_table/state_transition'
@@ -11,8 +12,15 @@ describe Chromosome do
   let(:nr_states_gene_mutated_value) { 9 }
   let(:nr_states_gene_value) { 7 }
   let(:nr_states_gene) { NumericGeneStub.new(nr_states_gene_value, nr_states_gene_mutated_value) }
-  let(:rows_gene_value) { [1, 2] }
-  let(:rows_gene_mutated_value) { [1, 2, 1] }
+  let(:rows_gene_value) { [
+      StateTableRowGeneStub.new(1),
+      StateTableRowGeneStub.new(2)
+  ] }
+  let(:rows_gene_mutated_value) { [
+      StateTableRowGeneStub.new(1),
+      StateTableRowGeneStub.new(2),
+      StateTableRowGeneStub.new(1)
+  ] }
   let(:rows_gene) { StateTableRowsGeneStub.new(rows_gene_value, rows_gene_mutated_value) }
   let(:chromosome) { Chromosome.new(nr_states_gene, rows_gene) }
 

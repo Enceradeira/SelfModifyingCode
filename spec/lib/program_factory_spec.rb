@@ -47,44 +47,47 @@ describe ProgramFactory do
       end
     end
 
-    it 'constructs addition program' do
-      test_cases = [
-          '0 0 0 0->0 0 0',
-          '0 0 0 1->0 0 1',
-          '0 0 1 0->0 1 0',
-          '0 0 1 1->0 1 1',
-          '0 1 0 0->0 0 1',
-          '0 1 0 1->0 1 0',
-          '0 1 1 0->0 1 1',
-          '0 1 1 1->1 0 0',
-          '1 0 0 0->0 1 0',
-          '1 0 0 1->0 1 1',
-          '1 0 1 0->1 0 0',
-          '1 0 1 1->1 0 1',
-          '1 1 0 0->0 1 1',
-          '1 1 0 1->1 0 0',
-          '1 1 1 0->1 0 1',
-          '1 1 1 1->1 1 0']
+    context 'with test_cases for addition' do
 
-      source = factory.build(test_cases)
-      expect(Machine.execute(%w(0 0 0 0), source, resources)).to eq(%w(0 0 0))
-      expect(Machine.execute(%w(0 0 0 1), source, resources)).to eq(%w(0 0 1))
-      expect(Machine.execute(%w(0 0 1 0), source, resources)).to eq(%w(0 1 0))
-      expect(Machine.execute(%w(0 0 1 1), source, resources)).to eq(%w(0 1 1))
-      expect(Machine.execute(%w(0 1 0 0), source, resources)).to eq(%w(0 0 1))
-      expect(Machine.execute(%w(0 1 0 1), source, resources)).to eq(%w(0 1 0))
-      expect(Machine.execute(%w(0 1 1 0), source, resources)).to eq(%w(0 1 1))
-      expect(Machine.execute(%w(0 1 1 1), source, resources)).to eq(%w(1 0 0))
-      expect(Machine.execute(%w(1 0 0 0), source, resources)).to eq(%w(0 1 0))
-      expect(Machine.execute(%w(1 0 0 1), source, resources)).to eq(%w(0 1 1))
-      expect(Machine.execute(%w(1 0 1 0), source, resources)).to eq(%w(1 0 0))
-      expect(Machine.execute(%w(1 0 1 1), source, resources)).to eq(%w(1 0 1))
-      expect(Machine.execute(%w(1 1 0 0), source, resources)).to eq(%w(0 1 1))
-      expect(Machine.execute(%w(1 1 0 1), source, resources)).to eq(%w(1 0 0))
-      expect(Machine.execute(%w(1 1 1 0), source, resources)).to eq(%w(1 0 1))
-      expect(Machine.execute(%w(1 1 1 1), source, resources)).to eq(%w(1 1 0))
+      it 'constructs addition program' do
+        test_cases = [
+            '0 0 0 0->0 0 0',
+            '0 0 0 1->0 0 1',
+            '0 0 1 0->0 1 0',
+            '0 0 1 1->0 1 1',
+            '0 1 0 0->0 0 1',
+            '0 1 0 1->0 1 0',
+            '0 1 1 0->0 1 1',
+            '0 1 1 1->1 0 0',
+            '1 0 0 0->0 1 0',
+            '1 0 0 1->0 1 1',
+            '1 0 1 0->1 0 0',
+            '1 0 1 1->1 0 1',
+            '1 1 0 0->0 1 1',
+            '1 1 0 1->1 0 0',
+            '1 1 1 0->1 0 1',
+            '1 1 1 1->1 1 0']
 
-      puts resources.create_statistic
+        source = factory.build(test_cases)
+        expect(Machine.execute(%w(0 0 0 0), source, resources)).to eq(%w(0 0 0))
+        expect(Machine.execute(%w(0 0 0 1), source, resources)).to eq(%w(0 0 1))
+        expect(Machine.execute(%w(0 0 1 0), source, resources)).to eq(%w(0 1 0))
+        expect(Machine.execute(%w(0 0 1 1), source, resources)).to eq(%w(0 1 1))
+        expect(Machine.execute(%w(0 1 0 0), source, resources)).to eq(%w(0 0 1))
+        expect(Machine.execute(%w(0 1 0 1), source, resources)).to eq(%w(0 1 0))
+        expect(Machine.execute(%w(0 1 1 0), source, resources)).to eq(%w(0 1 1))
+        expect(Machine.execute(%w(0 1 1 1), source, resources)).to eq(%w(1 0 0))
+        expect(Machine.execute(%w(1 0 0 0), source, resources)).to eq(%w(0 1 0))
+        expect(Machine.execute(%w(1 0 0 1), source, resources)).to eq(%w(0 1 1))
+        expect(Machine.execute(%w(1 0 1 0), source, resources)).to eq(%w(1 0 0))
+        expect(Machine.execute(%w(1 0 1 1), source, resources)).to eq(%w(1 0 1))
+        expect(Machine.execute(%w(1 1 0 0), source, resources)).to eq(%w(0 1 1))
+        expect(Machine.execute(%w(1 1 0 1), source, resources)).to eq(%w(1 0 0))
+        expect(Machine.execute(%w(1 1 1 0), source, resources)).to eq(%w(1 0 1))
+        expect(Machine.execute(%w(1 1 1 1), source, resources)).to eq(%w(1 1 0))
+
+        puts resources.create_statistic
+      end
     end
   end
 end
