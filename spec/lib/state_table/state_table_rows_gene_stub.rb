@@ -12,8 +12,8 @@ class StateTableRowsGeneStub
     StateTableRowsGeneStub.new(@mutated_rows, @mutated_rows)
   end
 
-  def decode
-    @rows.map { |r| r.decode }
+  def decode(nr_states)
+    {:nr_states => nr_states, :rows => @rows}
   end
 
   def ==(other)

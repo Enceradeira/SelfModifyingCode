@@ -4,13 +4,15 @@ require_relative 'state_table_row'
 require_relative 'state_transition'
 require_relative 'mutation'
 
-class Chromosome< Struct.new(
-    :nr_states, :rows_gene)
-
+class Chromosome
+  private
   def initialize(nr_states, rows_gene)
-    self.nr_states = nr_states
-    self.rows_gene = rows_gene
+    @nr_states = nr_states
+    @rows_gene = rows_gene
   end
+
+  protected
+  attr_reader :nr_states,:rows_gene
 
   public
   class << self
@@ -22,7 +24,7 @@ class Chromosome< Struct.new(
   end
 
   def decode
-    self.rows_gene.decode
+    @rows_gene.decode(nr_states.value)
   end
 
   def mutate
@@ -33,4 +35,12 @@ class Chromosome< Struct.new(
     genes = mutation.execute
     Chromosome.new(*genes)
   end
+
+  def ==(other)
+    self.class == other.class &&
+        @nr_states==other.nr_states &&
+        @rows_gene==other.rows_gene
+  end
+
+  alias_method :eql?, :==
 end
