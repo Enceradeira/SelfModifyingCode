@@ -1,4 +1,5 @@
 require_relative 'cell'
+require_relative 'constants'
 
 class Head
   def initialize(cell)
@@ -18,9 +19,9 @@ class Head
   end
 
   def move(direction)
-    if direction == :r
+    if direction == RIGHT
       @cell = @cell.right
-    elsif direction == :l
+    elsif direction == LEFT
       @cell = @cell.left
     end
   end

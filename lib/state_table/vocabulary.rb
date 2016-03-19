@@ -3,8 +3,16 @@ require_relative '../../lib/constants'
 class Vocabulary
   private
   def initialize(states, symbols)
-    @symbols = symbols
-    @states = Array.new(states).concat([INIT_STATE]).uniq
+    if symbols.any? { |s| s == UNDEFINED }
+      raise StandardError.new 'invalid symbol'
+    end
+    if states.any? { |s| s == UNDEFINED }
+      raise StandardError.new 'invalid state'
+    end
+    @symbols_on_input = symbols
+    @symbols_on_output = Array.new(symbols).concat([nil]).uniq
+    @states_on_input = Array.new(states).concat([INIT_STATE]).uniq
+    @states_on_output = Array.new(states).concat([ACCEPT_STATE]).uniq
   end
 
   def choose_one_from(enum, excluded_element)
@@ -17,11 +25,23 @@ class Vocabulary
   end
 
   public
-  def get_state_randomly(excluded_state=nil)
-    choose_one_from(@states, excluded_state)
+  def get_state_on_input(excluded_state=UNDEFINED)
+    choose_one_from(@states_on_input, excluded_state)
   end
 
-  def get_symbol_randomly(excluded_symbol =nil)
-    choose_one_from(@symbols, excluded_symbol)
+  def get_symbol_on_input(excluded_symbol=UNDEFINED)
+    choose_one_from(@symbols_on_input, excluded_symbol)
+  end
+
+  def get_state_on_output(excluded_state=UNDEFINED)
+    choose_one_from(@states_on_output, excluded_state)
+  end
+
+  def get_symbol_on_output(excluded_symbol=UNDEFINED)
+    choose_one_from(@symbols_on_output, excluded_symbol)
+  end
+
+  def get_direction(excluded_direction=UNDEFINED)
+    choose_one_from(DIRECTIONS, excluded_direction)
   end
 end
