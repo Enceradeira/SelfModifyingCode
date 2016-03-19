@@ -1,37 +1,48 @@
 require_relative 'state_transition'
 require_relative 'mutation'
+require_relative 'mutate_from_to_gene'
 
 class StateTransitionGene
   private
-  def initialize(new_symbol_gene, direction_gene, new_state_gene)
-    @new_symbol_gene = new_symbol_gene
-    @direction_gene = direction_gene
-    @new_state_gene = new_state_gene
+  def initialize(new_symbol, direction, new_state, vocabulary)
+    @new_symbol = new_symbol
+    @direction = direction
+    @new_state = new_state
+    @vocabulary = vocabulary
   end
 
   protected
-  attr_reader :new_symbol_gene, :new_state_gene, :direction_gene
+  attr_reader :new_symbol, :new_state, :direction
 
   public
+  class << self
+    def create(vocabulary)
+      new_symbol = vocabulary.get_symbol_on_output
+      direction = vocabulary.get_direction
+      new_state = vocabulary.get_state_on_output
+      StateTransitionGene.new(new_symbol, direction, new_state, vocabulary)
+    end
+  end
+
   def mutate
     mutation = Mutation.new
-    mutation.register(@new_symbol_gene)
-    mutation.register(@direction_gene)
-    mutation.register(@new_state_gene)
+    mutation.register(MutateFromToGene.new(@new_symbol, @vocabulary.get_symbol_on_output(@new_symbol)))
+    mutation.register(MutateFromToGene.new(@direction, @vocabulary.get_direction(@direction)))
+    mutation.register(MutateFromToGene.new(@new_state, @vocabulary.get_state_on_output(@new_state)))
 
-    mutations = mutation.execute
-    self.class.new(*mutations)
+    mutations = mutation.execute.map { |g| g.decode }
+    StateTransitionGene.new(*(mutations.concat([@vocabulary])))
   end
 
   def decode
-    StateTransition.new(@new_symbol_gene.value, @direction_gene.value, @new_state_gene.value)
+    StateTransition.new(@new_symbol, @direction, @new_state)
   end
 
   def ==(other)
     self.class == other.class &&
-        @new_symbol_gene==other.new_symbol_gene &&
-        @direction_gene==other.direction_gene &&
-        @new_state_gene==other.new_state_gene
+        @new_symbol==other.new_symbol &&
+        @direction==other.direction &&
+        @new_state==other.new_state
   end
 
   alias_method :eql?, :==

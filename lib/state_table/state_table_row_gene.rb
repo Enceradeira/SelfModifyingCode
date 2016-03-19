@@ -18,7 +18,7 @@ class StateTableRowGene
   public
   class << self
     def create(vocabulary)
-      tr_gene = StateTransitionGene.new(NumericGene.new(1),NumericGene.new(1),NumericGene.new(1))
+      tr_gene = StateTransitionGene.create(vocabulary)
       si_gene = StateInputGene.create(vocabulary)
       StateTableRowGene.new(si_gene, tr_gene)
     end
