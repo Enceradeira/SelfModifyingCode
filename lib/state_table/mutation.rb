@@ -1,21 +1,21 @@
 class Mutation
   private
   def initialize
-    @genes = []
+    @subjects = []
   end
 
   public
-  def register(gene)
-    @genes << gene
+  def register(mutation_subject)
+    @subjects << mutation_subject
   end
 
   def execute
-    gene_to_be_mutated = @genes.sample
-    @genes.map do |gene|
-      if gene == gene_to_be_mutated
-        gene.mutate
+    subject_to_be_mutated = @subjects.sample
+    @subjects.map do |subject|
+      if subject == subject_to_be_mutated
+        subject.mutate
       else
-        gene
+        subject
       end
     end
   end

@@ -1,34 +1,45 @@
 require_relative 'state_input'
 require_relative 'mutation'
+require_relative 'mutate_from_to_gene'
 
 class StateInputGene
   private
-  def initialize(state_gene, symbol_gene)
-    @state_gene = state_gene
-    @symbol_gene = symbol_gene
+  def initialize(state, symbol, vocabulary)
+    @vocabulary = vocabulary
+    @state = state
+    @symbol =symbol
   end
 
   protected
-  attr_reader :state_gene, :symbol_gene
+  attr_reader :state, :symbol
 
   public
+  class << self
+    def create(vocabulary)
+      @vocabulary = vocabulary
+      state = vocabulary.get_state_randomly
+      symbol =vocabulary.get_symbol_randomly
+      StateInputGene.new(state, symbol, vocabulary)
+    end
+  end
+
   def decode
-    StateInput.new(@state_gene.value, @symbol_gene.value)
+    StateInput.new(@state, @symbol)
   end
 
   def mutate
     mutation = Mutation.new
-    mutation.register(@state_gene)
-    mutation.register(@symbol_gene)
+    mutation.register(MutateFromToGene.new(@state, @vocabulary.get_state_randomly(@state)))
+    mutation.register(MutateFromToGene.new(@symbol, @vocabulary.get_symbol_randomly(@symbol)))
 
-    mutations = mutation.execute
-    StateInputGene.new(*mutations)
+    mutations = mutation.execute.map { |g| g.decode }
+    StateInputGene.new(*(mutations.concat([@vocabulary])))
   end
 
   def ==(other)
     self.class == other.class &&
-        @state_gene==other.state_gene &&
-        @symbol_gene==other.symbol_gene
+        @state==other.state &&
+        @symbol==other.symbol
   end
 
   alias_method :eql?, :==

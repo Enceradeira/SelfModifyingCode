@@ -5,6 +5,7 @@ require_relative 'state_input_gene_stub'
 require_relative 'state_transition_gene_stub'
 require_relative '../../../lib/state_table/state_input'
 require_relative '../../../lib/state_table/state_table_row'
+require_relative '../../../lib/state_table/vocabulary'
 
 describe StateTableRowGene do
   let(:gene) { StateTableRowGene.new(state_input_gene, transition_gene) }
@@ -15,9 +16,10 @@ describe StateTableRowGene do
   let(:state_transition_mutated) { :sre };
   let(:transition_gene) { StateTransitionGeneStub.new(state_transition, state_transition_mutated) }
   let(:nr_tested_examples) { 100 }
+  let(:vocabulary) { Vocabulary.new([state_input, state_input_mutated], [:F]) }
 
   describe 'create' do
-    it { expect(StateTableRowGene.create).to be_a(StateTableRowGene) }
+    it { expect(StateTableRowGene.create(vocabulary)).to be_a(StateTableRowGene) }
   end
 
   describe 'decode' do

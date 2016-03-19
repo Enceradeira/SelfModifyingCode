@@ -17,7 +17,7 @@ class Chromosome
   public
   class << self
     def create
-      nr_states = NumericGene.new(0)
+      nr_states = NumericGene.new
       state_table_rows_gene = StateTableRowsGene.create
       Chromosome.new(nr_states, state_table_rows_gene)
     end

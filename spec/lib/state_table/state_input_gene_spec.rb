@@ -1,52 +1,84 @@
 require 'rspec'
 require_relative '../../../lib/state_table/state_input_gene'
+require_relative '../../../lib/state_table/vocabulary'
+require_relative '../../../lib/constants'
 require_relative 'numeric_gene_stub'
 
 describe StateInputGene do
-  let(:nr_tested_examples) { 50 }
-  let(:gene) { StateInputGene.new(
-      NumericGeneStub.new(state_value, state_mutated_value),
-      NumericGeneStub.new(symbol_value, symbol_mutated_value)) }
-  let(:state_value) { 3 }
-  let(:state_mutated_value) { 6 }
-  let(:symbol_value) { 45 }
-  let(:symbol_mutated_value) { 1 }
+  let(:vocabulary) { Vocabulary.new(states, symbols) }
+  let(:states) { [] }
+  let(:symbols) { [] }
+  let(:state1) { :A }
+  let(:state2) { :B }
+  let(:state3) { :F }
+  let(:symbol1) { 1 }
+  let(:symbol2) { 4 }
+  let(:symbol3) { -67 }
 
   describe 'decode' do
+    let(:gene) { StateInputGene.new(state1, symbol1, vocabulary) }
+    let(:states) { [state1] }
+    let(:symbols) { [symbol1] }
     it { expect(gene.decode).to be_a(StateInput) }
-    it { expect(gene.decode).to eq(StateInput.new(state_value, symbol_value)) }
+    it { expect(gene.decode).to eq(StateInput.new(state1, symbol1)) }
   end
 
   describe 'mutate' do
+    let(:nr_tested_examples) { 50 }
+    let(:gene) { StateInputGene.create(vocabulary) }
+    let(:states) { [state1, state2, state3] }
+    let(:symbols) { [symbol1, symbol2, symbol3] }
+
     it 'mutates state sometimes' do
-      state_has_changed = nr_tested_examples.times.any? do
-        gene.mutate.decode.state.eql?(state_mutated_value)
-      end
-      expect(state_has_changed).to be_truthy
-    end
-    it 'mutates input sometimes' do
-      input_has_changed = nr_tested_examples.times.any? do
-        gene.mutate.decode.symbol.eql?(symbol_mutated_value)
-      end
-      expect(input_has_changed).to be_truthy
-    end
-    it 'mutates input or state but not both' do
-      all_xor = nr_tested_examples.times.all? do
-        mutated_transition = gene.mutate.decode
-        input_changed =mutated_transition.symbol.eql?(symbol_mutated_value)
-        state_changed = mutated_transition.state.eql?(state_mutated_value)
-        input_changed ^ state_changed
-      end
-      expect(all_xor).to be_truthy
+      mutated_states = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate.decode.state }.uniq
+      expect(mutated_states).to match_array(states.to_ary + [INIT_STATE])
     end
 
+    it 'mutates symbol sometimes' do
+      mutated_symbols = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate.decode.symbol }.uniq
+      expect(mutated_symbols).to match_array(symbols)
+    end
+    it 'mutates input or state but not both' do
+      value = gene.decode
+      what_changed_xor = nr_tested_examples.times.map do
+        mutated_value = gene.mutate.decode
+        has_state_changed = mutated_value.state != value.state
+        has_symbol_changed = mutated_value.symbol != value.symbol
+        has_state_changed ^ has_symbol_changed
+      end.uniq
+      expect(what_changed_xor).to contain_exactly(true)
+    end
+    it 'does not repeat states' do
+      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate }.map{|g| g.decode}
+      next_mutations = mutations.drop(1)
+      state_mutations = mutations.zip(next_mutations).select do |e1, e2|
+        !e2.nil? && e1.symbol == e2.symbol
+      end
+      state_always_changes = state_mutations.all? do |e1, e2|
+        e1.state != e2.state
+      end
+
+      expect(state_always_changes).to be_truthy
+    end
+    it 'does not repeat symbols' do
+      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate }.map{|g| g.decode}
+      next_mutations = mutations.drop(1)
+      state_mutations = mutations.zip(next_mutations).select do |e1, e2|
+        !e2.nil? && e1.state == e2.state
+      end
+      state_always_changes = state_mutations.all? do |e1, e2|
+        e1.symbol != e2.symbol
+      end
+
+      expect(state_always_changes).to be_truthy
+    end
   end
 
   describe 'eql?' do
-    it { expect(StateInputGene.new(1, 2)).to eq(StateInputGene.new(1, 2)) }
-    it { expect(StateInputGene.new(1, 2)).not_to eq(StateInputGene.new(2, 2)) }
-    it { expect(StateInputGene.new(1, 2)).not_to eq(StateInputGene.new(1, 3)) }
-    it { expect(StateInputGene.new(1, 2)).not_to eq(8) }
+    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).to eq(StateInputGene.new(state1, symbol2, vocabulary)) }
+    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(StateInputGene.new(state2, symbol2, vocabulary)) }
+    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(StateInputGene.new(state1, symbol1, vocabulary)) }
+    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(8) }
   end
 
 end
