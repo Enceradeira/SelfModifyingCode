@@ -21,7 +21,8 @@ class ProgramFactory
     nr_ok = test_cases.count { |c| c.passes_for?(program, @resources) }
     until nr_ok == nr do
 
-      program  = Program.new(StateTable.new(chromosome.mutate))
+      chromosome = chromosome.mutate
+      program  = Program.new(StateTable.new(chromosome.decode))
       nr_ok = test_cases.count { |c| c.passes_for?(program, @resources) }
     end
 

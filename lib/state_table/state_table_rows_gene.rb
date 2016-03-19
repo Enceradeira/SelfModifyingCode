@@ -19,7 +19,7 @@ class StateTableRowsGene
 
   public
   class << self
-    def create(nr_rows_gene=NumericGene.new(1))
+    def create(nr_rows_gene=NumericGene.new)
       rows = nr_rows_gene.value.times.map { |_| StateTableRowGene.create }
       StateTableRowsGene.new(nr_rows_gene, rows)
     end

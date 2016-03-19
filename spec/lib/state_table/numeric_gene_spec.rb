@@ -2,58 +2,34 @@ require 'rspec'
 require_relative '../../../lib/state_table/numeric_gene'
 
 describe NumericGene do
-  let(:gene) { NumericGene.new(max) }
+
+  let(:nr_tested_examples) { 100 }
+  let(:gene) { NumericGene.new }
 
   describe 'value' do
-
-    [1, 10].each do |m|
-      context "when max is #{m}" do
-        let(:max) { m }
-        context 'called 10 times' do
-          let(:values) { 10.times.map { NumericGene.new(max).value } }
-
-          it { expect(values).to all (be >= 0) }
-          it { expect(values).to all (be <= max) }
-          it { expect(values.uniq.count).to be > 1 }
-        end
-
-        it 'return same value when called repetitively' do
-          expect(gene.value).to eq(gene.value)
-        end
-      end
-
-      it { expect(NumericGene.new(0).value).to be==0 }
-    end
+    it { expect(gene.value).to eq(0) }
   end
 
   describe 'mutate' do
-    def select_twice_mutated_gene(&block)
-      mutated_genes_sample.select do |g|
-        nr_samples.times.map { g.mutate.value }.all?(&block)
+    it 'mutates value by setting a single bit' do
+      values = nr_tested_examples.times.map do
+        mutation1 = gene.mutate
+        mutation2 = mutation1.mutate
+        {:mutation1 => mutation1.value, :mutation2 => mutation2.value}
       end
-    end
 
-    let(:max) { 2 }
-    let(:nr_samples) { 100 }
-    let (:mutated_genes_sample) { nr_samples.times.map { gene.mutate } }
-
-    it { expect(gene.mutate).to be_a(NumericGene) }
-    it 'always returns new value' do
-      new_values = mutated_genes_sample.map { |g| g.value }
-      expect(new_values.select { |v| v==gene.value }).to be_empty
-    end
-
-    it 'increases max by 1' do
-      values = mutated_genes_sample.map { |g| g.value }.uniq
-      expect(values).to match_array([0, 1, 2, 3].reject{|v| v==gene.value})
-    end
-
-    context 'called twice' do
-      it 'increases max by 2' do
-        values = mutated_genes_sample.map{ |g |g.mutate }.map { |g| g.value }.uniq
-        expect(values).to contain_exactly(0, 1, 2, 3, 4)
+      # e.g 0001 ^ 0101 = 0100 (xor) which tells which bit has been set between mutation1 and mutation2
+      values_xor = values.map do |t|
+        t[:mutation1] ^ t[:mutation2]
       end
-    end
 
+      # since only one bit should have been set by mutation2 all xor'ed values should be dividable by 2
+      all_diff_by_one_bit = values_xor.all? { |v| v == 1 || (v % 2)==0 }
+      expect(all_diff_by_one_bit).to be_truthy
+    end
+    it 'mutates by a random value' do
+      values = nr_tested_examples.times.map { gene.mutate.value }.uniq
+      expect(values.count).to be > 1
+    end
   end
 end

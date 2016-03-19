@@ -1,21 +1,32 @@
 require_relative 'randomizer'
+require 'bitarray'
+
+NUMERIC_GENE_NR_BITS = 16
 
 class NumericGene
-  def initialize(max)
-    @max = max
+  private
+  def initialize(bits = nil)
+    @bits = bits.nil? ? BitArray.new(NUMERIC_GENE_NR_BITS) : bits
   end
 
+  public
   def value
-    @value ||= Randomizer.rand(@max)
+    power = 0
+    value = 0
+    @bits.each do |i|
+      value = value + i * (2 ** power)
+      power = power + 1
+    end
+    value
   end
 
   def mutate
-    diff = [true, false].sample ? -1 : 1
-    new_gene = NumericGene.new(Integer(@max+diff))
-    if new_gene.value == value
-      mutate
-    else
-      new_gene
-    end
+    copy = BitArray.new(NUMERIC_GENE_NR_BITS)
+    copy.each_with_index { |_, i| copy[i] = @bits[i] }
+
+    modified_index = Randomizer.rand(NUMERIC_GENE_NR_BITS-1)
+    copy[modified_index] = copy[modified_index] == 1 ? 0 : 1
+
+    NumericGene.new(copy)
   end
 end

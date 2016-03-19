@@ -9,7 +9,7 @@ class StateTableRowGeneStub
   attr_reader :value
 
   public
-  def decode
+  def decode()
     @value
   end
 
