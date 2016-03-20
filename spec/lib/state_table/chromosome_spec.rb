@@ -5,6 +5,7 @@ require_relative '../../../lib/constants'
 require_relative '../../../lib/state_table/vocabulary'
 require_relative 'numeric_gene_stub'
 require_relative 'state_table_row_gene_stub'
+require_relative '../symbols_stub'
 
 describe Chromosome do
   let(:nr_tested_examples) { 100 }
@@ -19,7 +20,7 @@ describe Chromosome do
       NumericGeneStub.new(nr_states, nr_states_mutated),
       vocabulary) }
   let(:row_gene_factory) { StateTableRowGeneStub.new(0, -1) }
-  let(:symbols) { [:A, :C, :F] }
+  let(:symbols) { SymbolsStub.new([:A, :C, :F], [:AA, :AC, :AD]) }
   let(:vocabulary) { Vocabulary.new(nr_states, symbols) }
 
   describe 'create' do

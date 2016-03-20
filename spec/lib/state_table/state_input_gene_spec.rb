@@ -3,31 +3,32 @@ require_relative '../../../lib/state_table/state_input_gene'
 require_relative '../../../lib/state_table/vocabulary'
 require_relative '../../../lib/constants'
 require_relative 'numeric_gene_stub'
+require_relative '../symbols_stub'
 
 describe StateInputGene do
   let(:vocabulary) { Vocabulary.new(states.count, symbols) }
   let(:states) { [] }
-  let(:symbols) { [] }
+  let(:symbols) { SymbolsStub.new([], []) }
   let(:state1) { 0 }
   let(:state2) { 1 }
   let(:state3) { 2 }
-  let(:symbol1) { 1 }
-  let(:symbol2) { 4 }
-  let(:symbol3) { -67 }
+  let(:input_symbol1) { 1 }
+  let(:input_symbol2) { 4 }
+  let(:input_symbol3) { -67 }
 
   describe 'decode' do
-    let(:gene) { StateInputGene.new(state1, symbol1, vocabulary) }
+    let(:gene) { StateInputGene.new(state1, input_symbol1, vocabulary) }
     let(:states) { [state1] }
-    let(:symbols) { [symbol1] }
+    let(:symbols) { SymbolsStub.new([input_symbol1], []) }
     it { expect(gene.decode).to be_a(StateInput) }
-    it { expect(gene.decode).to eq(StateInput.new(state1, symbol1)) }
+    it { expect(gene.decode).to eq(StateInput.new(state1, input_symbol1)) }
   end
 
   describe 'mutate' do
     let(:nr_tested_examples) { 50 }
     let(:gene) { StateInputGene.create(vocabulary) }
     let(:states) { [state1, state2, state3] }
-    let(:symbols) { [symbol1, symbol2, symbol3] }
+    let(:symbols) { SymbolsStub.new([input_symbol1, input_symbol2, input_symbol3], [413]) }
 
     it 'mutates state sometimes' do
       mutated_states = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate(vocabulary).decode.state }.uniq
@@ -36,7 +37,7 @@ describe StateInputGene do
 
     it 'mutates symbol sometimes' do
       mutated_symbols = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate(vocabulary).decode.symbol }.uniq
-      expect(mutated_symbols).to match_array(symbols)
+      expect(mutated_symbols).to match_array(symbols.for_input)
     end
     it 'mutates input or state but not both' do
       value = gene.decode
@@ -49,7 +50,7 @@ describe StateInputGene do
       expect(what_changed_xor).to contain_exactly(true)
     end
     it 'does not repeat states' do
-      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate(vocabulary) }.map{|g| g.decode}
+      mutations = nr_tested_examples.times.reduce([gene]) { |genes| genes << genes.last.mutate(vocabulary) }.map { |g| g.decode }
       next_mutations = mutations.drop(1)
       state_mutations = mutations.zip(next_mutations).select do |e1, e2|
         !e2.nil? && e1.symbol == e2.symbol
@@ -61,7 +62,7 @@ describe StateInputGene do
       expect(state_always_changes).to be_truthy
     end
     it 'does not repeat symbols' do
-      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate(vocabulary) }.map{|g| g.decode}
+      mutations = nr_tested_examples.times.reduce([gene]) { |genes| genes << genes.last.mutate(vocabulary) }.map { |g| g.decode }
       next_mutations = mutations.drop(1)
       state_mutations = mutations.zip(next_mutations).select do |e1, e2|
         !e2.nil? && e1.state == e2.state
@@ -75,10 +76,10 @@ describe StateInputGene do
   end
 
   describe 'eql?' do
-    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).to eq(StateInputGene.new(state1, symbol2, vocabulary)) }
-    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(StateInputGene.new(state2, symbol2, vocabulary)) }
-    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(StateInputGene.new(state1, symbol1, vocabulary)) }
-    it { expect(StateInputGene.new(state1, symbol2, vocabulary)).not_to eq(8) }
+    it { expect(StateInputGene.new(state1, input_symbol2, vocabulary)).to eq(StateInputGene.new(state1, input_symbol2, vocabulary)) }
+    it { expect(StateInputGene.new(state1, input_symbol2, vocabulary)).not_to eq(StateInputGene.new(state2, input_symbol2, vocabulary)) }
+    it { expect(StateInputGene.new(state1, input_symbol2, vocabulary)).not_to eq(StateInputGene.new(state1, input_symbol1, vocabulary)) }
+    it { expect(StateInputGene.new(state1, input_symbol2, vocabulary)).not_to eq(8) }
   end
 
 end

@@ -4,19 +4,20 @@ require_relative '../../../lib/state_table/state_transition'
 require_relative '../../../lib/constants'
 require_relative '../../../lib/state_table/vocabulary'
 require_relative 'numeric_gene_stub'
+require_relative '../symbols_stub'
 
 describe StateTransitionGene do
   let(:nr_tested_examples) { 100 }
-  let(:gene) { StateTransitionGene.new(symbol1, direction1, state1) }
+  let(:gene) { StateTransitionGene.new(output_symbol1, direction1, state1) }
   let(:direction1) { LEFT }
   let(:state1) { 0 }
   let(:state2) { 1 }
-  let(:symbol1) { 10 }
-  let(:symbol2) { 51 }
+  let(:output_symbol1) { 'A' }
+  let(:output_symbol2) { 'DF' }
   let(:states) { [state1, state2] }
   let(:states_including_accept) { Array.new(states).concat([ACCEPT_STATE]) }
-  let(:symbols_including_nil) { Array.new(symbols).concat([nil]) }
-  let(:symbols) { [symbol1, symbol2] }
+  let(:symbols_including_nil) { Array.new(symbols.for_output).concat([nil]) }
+  let(:symbols) { SymbolsStub.new([10, 76], [output_symbol1, output_symbol2]) }
   let(:vocabulary) { Vocabulary.new(states.count, symbols) }
 
   describe 'create' do
@@ -30,7 +31,7 @@ describe StateTransitionGene do
   describe 'mutate' do
     it 'mutates new_symbol sometimes' do
       new_symbol_has_changed = nr_tested_examples.times.any? do
-        !gene.mutate(vocabulary).decode.new_symbol.eql?(symbol1)
+        !gene.mutate(vocabulary).decode.new_symbol.eql?(output_symbol1)
       end
 
       expect(new_symbol_has_changed).to be_truthy
@@ -52,7 +53,7 @@ describe StateTransitionGene do
     it 'mutates only new_symbol, direction or new_state but not more than one' do
       all_xor = nr_tested_examples.times.all? do
         mutated_transition = gene.mutate(vocabulary).decode
-        new_symbol_changed = !mutated_transition.new_symbol.eql?(symbol1)
+        new_symbol_changed = !mutated_transition.new_symbol.eql?(output_symbol1)
         direction_changed = !mutated_transition.direction.eql?(direction1)
         new_state_changed = !mutated_transition.new_state.eql?(state1)
 
@@ -66,7 +67,7 @@ describe StateTransitionGene do
 
   describe 'decode' do
     it { expect(gene.decode).to be_a(StateTransition) }
-    it { expect(gene.decode).to eq(StateTransition.new(symbol1, direction1, state1)) }
+    it { expect(gene.decode).to eq(StateTransition.new(output_symbol1, direction1, state1)) }
   end
 
   describe 'eql?' do

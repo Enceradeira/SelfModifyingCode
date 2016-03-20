@@ -14,7 +14,7 @@ class ProgramFactory
     test_cases = test_cases_array.map { |t| TestCase.new(t) }
     symbols = Symbols.new(test_cases)
 
-    chromosome  = Chromosome.create
+    chromosome  = Chromosome.create(symbols)
     program = Program.new(StateTable.new(chromosome.decode))
 
     nr = test_cases.count

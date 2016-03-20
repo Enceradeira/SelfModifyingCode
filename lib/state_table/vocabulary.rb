@@ -3,14 +3,21 @@ require_relative '../../lib/constants'
 class Vocabulary
   private
   def initialize(nr_states, symbols)
-    if symbols.any? { |s| s == UNDEFINED }
-      raise StandardError.new 'invalid symbol'
-    end
+    check_symbols(symbols.for_input)
+    check_symbols(symbols.for_output)
+
     states = nr_states.times.map { |i| i }
-    @symbols_on_input = symbols
-    @symbols_on_output = Array.new(symbols).concat([nil]).uniq
+    @symbols = symbols
+    @symbols_on_input = symbols.for_input
+    @symbols_on_output = Array.new(symbols.for_output).concat([nil]).uniq
     @states_on_input = Array.new(states).concat([INIT_STATE]).uniq
     @states_on_output = Array.new(states).concat([ACCEPT_STATE]).uniq
+  end
+
+  def check_symbols(symbols)
+    if symbols.any? { |s| s == UNDEFINED }
+      raise StandardError.new 'invalid symbol for input'
+    end
   end
 
   def choose_one_from(enum, excluded_element)
@@ -51,6 +58,6 @@ class Vocabulary
     if nr_states < 1
       raise StandardError.new "value #{nr_states} for nr_states is invalid"
     end
-    Vocabulary.new(nr_states, @symbols_on_input)
+    Vocabulary.new(nr_states, @symbols)
   end
 end

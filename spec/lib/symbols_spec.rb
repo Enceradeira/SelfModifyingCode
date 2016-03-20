@@ -7,31 +7,25 @@ describe Symbols do
 
   context 'when no output defined' do
     let(:test_cases) { [TestCase.new('H->'), TestCase.new('1->')] }
-    describe 'for_output' do
-      it { expect(symbols.for_output).to contain_exactly(nil) }
-    end
-    describe ' for_input' do
-      it { expect(symbols.for_input).to contain_exactly(:H, :'1', nil) }
+    describe 'initialize' do
+      it { expect(lambda { Symbols.new(test_cases) }).to raise_error(StandardError) }
     end
   end
 
   context 'when no input defined' do
     let(:test_cases) { [TestCase.new('->'), TestCase.new('->AG')] }
-    describe 'for_output' do
-      it { expect(symbols.for_output).to contain_exactly(:AG, nil) }
-    end
-    describe ' for_input' do
-      it { expect(symbols.for_input).to contain_exactly(nil) }
+    describe 'initialize' do
+      it { expect(lambda { Symbols.new(test_cases) }).to raise_error(StandardError) }
     end
   end
 
   context 'when input and output defined' do
     let(:test_cases) { [TestCase.new('a b->D A'), TestCase.new('a c->D F')] }
     describe 'for_output' do
-      it { expect(symbols.for_output).to contain_exactly(:A, :D, :F, nil) }
+      it { expect(symbols.for_output).to contain_exactly(:A, :D, :F) }
     end
     describe ' for_input' do
-      it { expect(symbols.for_input).to contain_exactly(:a, :b, :c, nil) }
+      it { expect(symbols.for_input).to contain_exactly(:a, :b, :c) }
     end
   end
 end

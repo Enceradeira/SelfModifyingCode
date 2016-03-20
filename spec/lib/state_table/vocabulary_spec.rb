@@ -1,21 +1,26 @@
 require 'rspec'
 require_relative '../../../lib/constants'
 require_relative '../../../lib/state_table/vocabulary'
+require_relative '../../../spec/lib/symbols_stub'
 
 describe Vocabulary do
   let(:nr_tested_examples) { 100 }
   let(:vocabulary) { Vocabulary.new(states.count, symbols) }
+  let (:symbols) { SymbolsStub.new(input_symbols, output_symbols) }
   let (:states_including_init) { Array.new(states) + [INIT_STATE] }
   let (:states_including_accept) { Array.new(states) + [ACCEPT_STATE] }
-  let (:symbols_including_nil) { Array.new(symbols) + [nil] }
+  let (:output_symbols_including_nil) { Array.new(output_symbols) + [nil] }
 
   context 'several states and symbols available' do
     let (:states) { [state1, state2] }
-    let (:symbols) { [symbol1, symbol2] }
     let(:state1) { 0 }
     let(:state2) { 1 }
-    let(:symbol1) { 1 }
-    let(:symbol2) { 4 }
+    let(:input_symbol1) { 1 }
+    let(:input_symbol2) { 4 }
+    let(:output_symbols) { [output_symbol1, output_symbol2] }
+    let(:input_symbols) { [input_symbol1, input_symbol2] }
+    let(:output_symbol1) { :A }
+    let(:output_symbol2) { :C }
 
     describe 'get_direction' do
       it 'returns direction randomly' do
@@ -53,22 +58,22 @@ describe Vocabulary do
     describe 'get_symbol_on_input' do
       it 'returns symbol randomly' do
         results = nr_tested_examples.times.map { vocabulary.get_symbol_on_input }.flatten.uniq
-        expect(results).to match_array(symbols)
+        expect(results).to match_array(symbols.for_input)
       end
       it 'does not return specified symbol' do
-        results = nr_tested_examples.times.map { vocabulary.get_symbol_on_input(symbol2) }.flatten.uniq
-        expect(results).to contain_exactly(symbol1)
+        results = nr_tested_examples.times.map { vocabulary.get_symbol_on_input(input_symbol2) }.flatten.uniq
+        expect(results).to contain_exactly(input_symbol1)
       end
     end
 
     describe 'get_symbol_on_output' do
       it 'returns symbol randomly' do
         results = nr_tested_examples.times.map { vocabulary.get_symbol_on_output }.flatten.uniq
-        expect(results).to match_array(symbols_including_nil)
+        expect(results).to match_array(output_symbols_including_nil)
       end
       it 'does not return specified symbol' do
-        results = nr_tested_examples.times.map { vocabulary.get_symbol_on_output(symbol2) }.flatten.uniq
-        expect(results).to contain_exactly(symbol1, nil)
+        results = nr_tested_examples.times.map { vocabulary.get_symbol_on_output(output_symbol2) }.flatten.uniq
+        expect(results).to contain_exactly(output_symbol1, nil)
       end
     end
 
@@ -86,7 +91,8 @@ describe Vocabulary do
 
   context 'one state and one symbol available' do
     let (:states) { [state1] }
-    let (:symbols) { [symbol1] }
+    let (:output_symbols) { [symbol1] }
+    let (:input_symbols) { [symbol1] }
     let(:state1) { :A }
     let(:symbol1) { 1 }
 
@@ -126,7 +132,8 @@ describe Vocabulary do
 
   context 'no states or symbols available' do
     let (:states) { [] }
-    let (:symbols) { [] }
+    let (:output_symbols) { [] }
+    let (:input_symbols) { [] }
 
     describe 'get_state_on_input' do
       it 'always return init-state' do
