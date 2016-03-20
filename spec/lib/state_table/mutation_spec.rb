@@ -4,6 +4,7 @@ require_relative 'numeric_gene_stub'
 
 describe Mutation do
   let(:mutation) { Mutation.new }
+  let(:vocabulary) { Object.new }
 
   context 'one gene registered' do
     let(:gene) { NumericGeneStub.new(3, 5) }
@@ -13,7 +14,7 @@ describe Mutation do
 
     describe 'execute' do
       it 'mutates only gene' do
-        expect(mutation.execute).to eq([NumericGeneStub.new(5, 5)])
+        expect(mutation.execute(vocabulary)).to eq([NumericGeneStub.new(5, 5)])
       end
     end
 
@@ -29,7 +30,7 @@ describe Mutation do
     end
 
     it 'mutates exactly one gene' do
-      mutated_genes = mutation.execute
+      mutated_genes = mutation.execute(vocabulary)
       is_gene1_changed = mutated_genes[0].eql?(NumericGeneStub.new(5, 5))
       is_gene2_changed = mutated_genes[1].eql?(NumericGeneStub.new(6, 6))
       is_gene3_changed = mutated_genes[2].eql?(NumericGeneStub.new(7, 7))

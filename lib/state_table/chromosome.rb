@@ -6,39 +6,30 @@ require_relative 'mutation'
 
 class Chromosome
   private
-  def initialize(nr_states, rows_gene)
-    @nr_states = nr_states
+  def initialize(rows_gene)
     @rows_gene = rows_gene
   end
 
   protected
-  attr_reader :nr_states,:rows_gene
+  attr_reader :rows_gene
 
   public
   class << self
-    def create
-      nr_states = NumericGene.new
-      state_table_rows_gene = StateTableRowsGene.create
-      Chromosome.new(nr_states, state_table_rows_gene)
+    def create(symbols)
+      Chromosome.new(StateTableRowsGene.create(symbols))
     end
   end
 
   def decode
-    @rows_gene.decode(nr_states.value)
+    @rows_gene.decode
   end
 
   def mutate
-    mutation = Mutation.new
-    mutation.register(self.nr_states)
-    mutation.register(self.rows_gene)
-
-    genes = mutation.execute
-    Chromosome.new(*genes)
+    Chromosome.new(@rows_gene.mutate)
   end
 
   def ==(other)
     self.class == other.class &&
-        @nr_states==other.nr_states &&
         @rows_gene==other.rows_gene
   end
 

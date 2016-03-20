@@ -6,7 +6,7 @@ class NumericGeneStub < Struct.new(
     self.mutated_value = mutated_value
   end
 
-  def mutate()
+  def mutate(vocabulary)
     NumericGeneStub.new(self.mutated_value, self.mutated_value)
   end
 

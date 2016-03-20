@@ -8,7 +8,7 @@ class MutateFromToGene
   end
 
   public
-  def mutate
+  def mutate(vocabulary=nil)
     MutateNeverGene.new(@mutated_value)
   end
 

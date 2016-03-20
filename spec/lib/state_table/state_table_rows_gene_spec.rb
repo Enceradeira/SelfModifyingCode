@@ -1,19 +1,29 @@
 require 'rspec'
 require_relative '../../../lib/state_table/state_table_rows_gene'
 require_relative '../../../lib/state_table/state_table_row_gene'
+require_relative '../../../lib/constants'
+require_relative '../../../lib/state_table/vocabulary'
 require_relative 'numeric_gene_stub'
 require_relative 'state_table_row_gene_stub'
 
 describe StateTableRowsGene do
   let(:nr_tested_examples) { 100 }
   let(:nr_rows) { 3 }
-  let(:nr_rows_mutated) { 4 }
-  let(:rows_genes) { nr_rows.times.map { |i| StateTableRowGeneStub.new(-i, -i+100) } }
-  let(:gene) { StateTableRowsGene.new(NumericGeneStub.new(nr_rows, nr_rows_mutated), rows_genes) }
+  let(:nr_rows_mutated) { 100 }
+  let(:rows_genes) { nr_rows.times.map { StateTableRowGene.create(vocabulary) } }
+  let(:nr_states) { 2 }
+  let(:nr_states_mutated) { 5 }
+  let(:gene) { StateTableRowsGene.new(
+      NumericGeneStub.new(nr_rows, nr_rows_mutated),
+      rows_genes,
+      NumericGeneStub.new(nr_states, nr_states_mutated),
+      vocabulary) }
   let(:row_gene_factory) { StateTableRowGeneStub.new(0, -1) }
+  let(:symbols) { [:A, :C, :F] }
+  let(:vocabulary) { Vocabulary.new(nr_states, symbols) }
 
   describe 'create' do
-    it { expect(StateTableRowsGene.create).to be_a(StateTableRowsGene) }
+    it { expect(StateTableRowsGene.create(symbols)).to be_a(StateTableRowsGene) }
   end
 
   describe 'decode' do
@@ -34,21 +44,39 @@ describe StateTableRowsGene do
       mutation.count == nr_rows && mutation.select { |m| !existing_rows.include?(m) }.count == 1
     end
 
+    def has_nr_states_changed(mutation)
+      20.times.any? do
+        # test that a consecutive mutation uses an additional  'states'
+        mutation.mutate.decode.map { |r| r.state_input.state }.uniq.select { |s| s!=INIT_STATE }.count > nr_states
+      end
+    end
+
     it 'mutates nr_rows sometimes' do
       nr_rows_changed = nr_tested_examples.times.any? { has_nr_rows_changed(gene.mutate.decode) }
       expect(nr_rows_changed).to be_truthy
     end
 
     it 'mutates exactly one row sometimes' do
-
-      row_changed = nr_tested_examples.times.each { has_one_row_changed(gene, gene.mutate.decode) }
+      row_changed = nr_tested_examples.times.any? { has_one_row_changed(gene, gene.mutate.decode) }
       expect(row_changed).to be_truthy
     end
 
-    it 'mutates nr_rows or a row but not both' do
+    it 'mutates nr_states sometimes' do
+      nr_states_changed = nr_tested_examples.times.any? {
+        has_nr_states_changed(gene.mutate)
+      }
+      expect(nr_states_changed).to be_truthy
+    end
+
+    it 'mutates nr_rows, nr_states or a row but exclusively' do
       all_changes_xor = nr_tested_examples.times.all? {
-        mutation = gene.mutate.decode
-        has_one_row_changed(gene, mutation) ^ has_nr_rows_changed(mutation)
+        mutated_gene = gene.mutate
+        mutation = mutated_gene.decode
+        has_one_row_changed = has_one_row_changed(gene, mutation)
+        has_nr_rows_changed = has_nr_rows_changed(mutation)
+        has_nr_states_changed = has_nr_states_changed(mutated_gene)
+        has_one_row_changed ^ has_nr_rows_changed ^ has_nr_states_changed &&
+            !(has_one_row_changed && has_nr_rows_changed && has_nr_states_changed)
       }
       expect(all_changes_xor).to be_truthy
     end

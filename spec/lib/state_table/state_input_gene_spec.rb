@@ -30,18 +30,18 @@ describe StateInputGene do
     let(:symbols) { [symbol1, symbol2, symbol3] }
 
     it 'mutates state sometimes' do
-      mutated_states = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate.decode.state }.uniq
+      mutated_states = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate(vocabulary).decode.state }.uniq
       expect(mutated_states).to match_array(states.to_ary + [INIT_STATE])
     end
 
     it 'mutates symbol sometimes' do
-      mutated_symbols = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate.decode.symbol }.uniq
+      mutated_symbols = nr_tested_examples.times.map { StateInputGene.create(vocabulary).mutate(vocabulary).decode.symbol }.uniq
       expect(mutated_symbols).to match_array(symbols)
     end
     it 'mutates input or state but not both' do
       value = gene.decode
       what_changed_xor = nr_tested_examples.times.map do
-        mutated_value = gene.mutate.decode
+        mutated_value = gene.mutate(vocabulary).decode
         has_state_changed = mutated_value.state != value.state
         has_symbol_changed = mutated_value.symbol != value.symbol
         has_state_changed ^ has_symbol_changed
@@ -49,7 +49,7 @@ describe StateInputGene do
       expect(what_changed_xor).to contain_exactly(true)
     end
     it 'does not repeat states' do
-      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate }.map{|g| g.decode}
+      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate(vocabulary) }.map{|g| g.decode}
       next_mutations = mutations.drop(1)
       state_mutations = mutations.zip(next_mutations).select do |e1, e2|
         !e2.nil? && e1.symbol == e2.symbol
@@ -61,7 +61,7 @@ describe StateInputGene do
       expect(state_always_changes).to be_truthy
     end
     it 'does not repeat symbols' do
-      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate }.map{|g| g.decode}
+      mutations = nr_tested_examples.times.reduce([gene]){|genes| genes << genes.last.mutate(vocabulary) }.map{|g| g.decode}
       next_mutations = mutations.drop(1)
       state_mutations = mutations.zip(next_mutations).select do |e1, e2|
         !e2.nil? && e1.state == e2.state

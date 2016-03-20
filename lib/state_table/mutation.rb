@@ -9,11 +9,11 @@ class Mutation
     @subjects << mutation_subject
   end
 
-  def execute
+  def execute(vocabulary)
     subject_to_be_mutated = @subjects.sample
     @subjects.map do |subject|
       if subject == subject_to_be_mutated
-        subject.mutate
+        subject.mutate(vocabulary)
       else
         subject
       end

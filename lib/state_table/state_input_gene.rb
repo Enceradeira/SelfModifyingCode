@@ -27,12 +27,12 @@ class StateInputGene
     StateInput.new(@state, @symbol)
   end
 
-  def mutate
+  def mutate(vocabulary)
     mutation = Mutation.new
     mutation.register(MutateFromToGene.new(@state, @vocabulary.get_state_on_input(@state)))
     mutation.register(MutateFromToGene.new(@symbol, @vocabulary.get_symbol_on_input(@symbol)))
 
-    mutations = mutation.execute.map { |g| g.decode }
+    mutations = mutation.execute(vocabulary).map { |g| g.decode }
     StateInputGene.new(*(mutations.concat([@vocabulary])))
   end
 

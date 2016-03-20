@@ -10,7 +10,7 @@ class StateTransitionGeneStub
     @value
   end
 
-  def mutate
+  def mutate(vocabulary=nil)
     StateTransitionGeneStub.new(@mutated_value, @mutated_value)
   end
 end

@@ -5,7 +5,7 @@ class MutateNeverGene
   end
 
   public
-  def mutate
+  def mutate(vocabulary=nil)
     self
   end
 

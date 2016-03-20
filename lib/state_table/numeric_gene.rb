@@ -31,7 +31,7 @@ class NumericGene
     value
   end
 
-  def mutate
+  def mutate(vocabulary=nil)
     copy = BitArray.new(NUMERIC_GENE_NR_BITS)
     copy.each_with_index { |_, i| copy[i] = @bits[i] }
 

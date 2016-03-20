@@ -32,7 +32,7 @@ describe StateTableRowGene do
     it 'mutates state_input sometimes' do
       has_state_input_changed = false
       nr_tested_examples.times.each do
-        mutated_row = gene.mutate.decode
+        mutated_row = gene.mutate(vocabulary).decode
         original_row = gene.decode
         has_state_input_changed = !mutated_row.state_input.eql?(original_row.state_input)
         break if has_state_input_changed
@@ -42,7 +42,7 @@ describe StateTableRowGene do
     it 'mutates state_transition sometimes' do
       has_transition_changed = false
       nr_tested_examples.times.each do
-        mutated_row = gene.mutate.decode
+        mutated_row = gene.mutate(vocabulary).decode
         original_row = gene.decode
         has_transition_changed = !mutated_row.transition.eql?(original_row.transition)
         break if has_transition_changed
@@ -51,7 +51,7 @@ describe StateTableRowGene do
     end
     it 'always mutates state_input or state_tranisition' do
       si_changed_xor_tr_changed = nr_tested_examples.times.map do
-        mutated_row = gene.mutate.decode
+        mutated_row = gene.mutate(vocabulary).decode
         original_row = gene.decode
         si_changed = !mutated_row.state_input.eql?(original_row.state_input)
         transition_changed = !mutated_row.transition.eql?(original_row.transition)

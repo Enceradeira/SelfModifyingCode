@@ -24,12 +24,12 @@ class StateTableRowGene
     end
   end
 
-  def mutate
+  def mutate(vocabulary)
     mutation = Mutation.new
     mutation.register(@state_input_gene)
     mutation.register(@transition_gene)
 
-    mutations = mutation.execute
+    mutations = mutation.execute(vocabulary)
     StateTableRowGene.new(*mutations)
   end
 
