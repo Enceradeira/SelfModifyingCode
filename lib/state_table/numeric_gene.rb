@@ -10,6 +10,17 @@ class NumericGene
   end
 
   public
+
+  class << self
+    def create(value=0)
+      bits = BitArray.new(NUMERIC_GENE_NR_BITS)
+      value.to_s(2).chars.reverse.map { |v| v.to_i }.each_with_index do |v, i|
+        bits[i] = v
+      end
+      NumericGene.new(bits)
+    end
+  end
+
   def value
     power = 0
     value = 0

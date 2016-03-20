@@ -10,6 +10,11 @@ describe NumericGene do
     it { expect(gene.value).to eq(0) }
   end
 
+  describe 'create' do
+    it { expect(NumericGene.create(1).value).to eq(1) }
+    it { expect(NumericGene.create(6).value).to eq(6) }
+  end
+
   describe 'mutate' do
     it 'mutates value by setting a single bit' do
       values = nr_tested_examples.times.map do
