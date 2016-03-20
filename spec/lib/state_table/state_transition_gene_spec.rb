@@ -9,15 +9,15 @@ describe StateTransitionGene do
   let(:nr_tested_examples) { 100 }
   let(:gene) { StateTransitionGene.new(symbol1, direction1, state1, vocabulary) }
   let(:direction1) { LEFT }
-  let(:state1) { 1 }
-  let(:state2) { 5 }
+  let(:state1) { 0 }
+  let(:state2) { 1 }
   let(:symbol1) { 10 }
   let(:symbol2) { 51 }
   let(:states) { [state1, state2] }
   let(:states_including_accept) { Array.new(states).concat([ACCEPT_STATE]) }
   let(:symbols_including_nil) { Array.new(symbols).concat([nil]) }
   let(:symbols) { [symbol1, symbol2] }
-  let(:vocabulary) { Vocabulary.new(states, symbols) }
+  let(:vocabulary) { Vocabulary.new(states.count, symbols) }
 
   describe 'create' do
     let(:gene) { StateTransitionGene.create(vocabulary) }

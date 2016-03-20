@@ -5,12 +5,12 @@ require_relative '../../../lib/constants'
 require_relative 'numeric_gene_stub'
 
 describe StateInputGene do
-  let(:vocabulary) { Vocabulary.new(states, symbols) }
+  let(:vocabulary) { Vocabulary.new(states.count, symbols) }
   let(:states) { [] }
   let(:symbols) { [] }
-  let(:state1) { :A }
-  let(:state2) { :B }
-  let(:state3) { :F }
+  let(:state1) { 0 }
+  let(:state2) { 1 }
+  let(:state3) { 2 }
   let(:symbol1) { 1 }
   let(:symbol2) { 4 }
   let(:symbol3) { -67 }

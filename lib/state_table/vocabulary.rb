@@ -2,13 +2,11 @@ require_relative '../../lib/constants'
 
 class Vocabulary
   private
-  def initialize(states, symbols)
+  def initialize(nr_states, symbols)
     if symbols.any? { |s| s == UNDEFINED }
       raise StandardError.new 'invalid symbol'
     end
-    if states.any? { |s| s == UNDEFINED }
-      raise StandardError.new 'invalid state'
-    end
+    states = nr_states.times.map { |i| i }
     @symbols_on_input = symbols
     @symbols_on_output = Array.new(symbols).concat([nil]).uniq
     @states_on_input = Array.new(states).concat([INIT_STATE]).uniq
@@ -43,5 +41,16 @@ class Vocabulary
 
   def get_direction(excluded_direction=UNDEFINED)
     choose_one_from(DIRECTIONS, excluded_direction)
+  end
+
+  def mutate(nr_states)
+    nr_states_without_init_state = @states_on_input.count - 1
+    if nr_states == nr_states_without_init_state
+      return self
+    end
+    if nr_states < 1
+      raise StandardError.new "value #{nr_states} for nr_states is invalid"
+    end
+    Vocabulary.new(nr_states, @symbols_on_input)
   end
 end

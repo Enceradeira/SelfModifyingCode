@@ -9,14 +9,14 @@ require_relative '../../../lib/state_table/vocabulary'
 
 describe StateTableRowGene do
   let(:gene) { StateTableRowGene.new(state_input_gene, transition_gene) }
-  let(:state_input) { 7 }
-  let(:state_input_mutated) { 27 }
+  let(:state_input) { 0 }
+  let(:state_input_mutated) { 1 }
   let(:state_input_gene) { StateInputGeneStub.new(state_input, state_input_mutated) }
   let(:state_transition) { :rlf };
   let(:state_transition_mutated) { :sre };
   let(:transition_gene) { StateTransitionGeneStub.new(state_transition, state_transition_mutated) }
   let(:nr_tested_examples) { 100 }
-  let(:vocabulary) { Vocabulary.new([state_input, state_input_mutated], [:F]) }
+  let(:vocabulary) { Vocabulary.new(2, [:F]) }
 
   describe 'create' do
     it { expect(StateTableRowGene.create(vocabulary)).to be_a(StateTableRowGene) }
