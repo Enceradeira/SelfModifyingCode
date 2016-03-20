@@ -25,30 +25,30 @@ describe StateTableRowsGene do
 
   describe 'mutate' do
 
+    def has_nr_rows_changed(mutation)
+      mutation.count == nr_rows_mutated
+    end
+
+    def has_one_row_changed(original_gene, mutation)
+      existing_rows = original_gene.decode
+      mutation.count == nr_rows && mutation.select { |m| !existing_rows.include?(m) }.count == 1
+    end
+
     it 'mutates nr_rows sometimes' do
-      nr_rows_changed = nr_tested_examples.times.any? {
-        mutation = gene.mutate.decode
-        mutation.count == nr_rows_mutated
-      }
+      nr_rows_changed = nr_tested_examples.times.any? { has_nr_rows_changed(gene.mutate.decode) }
       expect(nr_rows_changed).to be_truthy
     end
 
     it 'mutates exactly one row sometimes' do
-      existing_rows = gene.decode
-      row_changed = nr_tested_examples.times.each {
-        mutation = gene.mutate.decode
-        mutation.count == nr_rows && mutation.select { |m| !existing_rows.include?(m) }.count == 1
-      }
+
+      row_changed = nr_tested_examples.times.each { has_one_row_changed(gene, gene.mutate.decode) }
       expect(row_changed).to be_truthy
     end
 
     it 'mutates nr_rows or a row but not both' do
-      existing_rows = gene.decode
       all_changes_xor = nr_tested_examples.times.all? {
         mutation = gene.mutate.decode
-        one_row_changed = mutation.count == nr_rows && mutation.select { |m| !existing_rows.include?(m) }.count == 1
-        nr_rows_changed = mutation.count == nr_rows_mutated
-        one_row_changed ^ nr_rows_changed
+        has_one_row_changed(gene, mutation) ^ has_nr_rows_changed(mutation)
       }
       expect(all_changes_xor).to be_truthy
     end
