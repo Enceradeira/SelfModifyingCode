@@ -45,18 +45,24 @@ describe TestRun do
       it { expect(better_test_run.is_better_than?(worse_test_run)).to be_truthy }
       it { expect(worse_test_run.is_better_than?(better_test_run)).to be_falsey }
     end
-    context 'when program description is smaller' do
-      let(:better_test_run) { TestRun.new(small_program, test_cases_two_failing, resources) }
-      let(:worse_test_run) { TestRun.new(large_program, test_cases_two_failing, resources) }
-      it { expect(better_test_run.is_better_than?(worse_test_run)).to be_truthy }
-      it { expect(worse_test_run.is_better_than?(better_test_run)).to be_falsey }
-    end
+
     context 'when program uses fewer machine cycles' do
       let(:better_test_run) { TestRun.new(large_program, test_cases_that_are_fast, resources) }
       let(:worse_test_run) { TestRun.new(large_program, test_cases_that_are_slow, resources) }
       it { expect(better_test_run.is_better_than?(worse_test_run)).to be_truthy }
       it { expect(worse_test_run.is_better_than?(better_test_run)).to be_falsey }
     end
+
+=begin
+    context 'when program description is smaller' do
+      let(:better_test_run) { TestRun.new(small_program, test_cases_two_failing, resources) }
+      let(:worse_test_run) { TestRun.new(large_program, test_cases_two_failing, resources) }
+      it { expect(better_test_run.is_better_than?(worse_test_run)).to be_truthy }
+      it { expect(worse_test_run.is_better_than?(better_test_run)).to be_falsey }
+    end
+=end
+
+
     # context 'when program execution uses less tape' implement as needed
   end
 end

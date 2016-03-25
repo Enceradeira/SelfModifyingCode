@@ -21,13 +21,13 @@ class ProgramFactory
     symbols = Symbols.new(test_cases)
 
     best_chromosome = Chromosome.create(symbols)
-    best_test_run = TestRun.new(create_program(best_chromosome), test_cases)
+    best_test_run = TestRun.new(create_program(best_chromosome), test_cases, @resources)
 
     until best_test_run.all_tests_ok? do
 
       mutated_chromosome = best_chromosome.mutate
       mutated_program = create_program(mutated_chromosome)
-      test_run = TestRun.new(mutated_program, test_cases)
+      test_run = TestRun.new(mutated_program, test_cases, @resources)
 
       if test_run.is_better_than?(best_test_run)
         best_test_run = test_run

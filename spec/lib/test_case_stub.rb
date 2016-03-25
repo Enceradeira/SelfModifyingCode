@@ -13,6 +13,6 @@ class TestCaseStub
     if resources.nil?
       raise StandardError.new 'no resources provided'
     end
-    return {:is_ok => @is_passing, :nr_machine_cycles => @nr_machine_cycles}
+    return {:is_ok => @is_passing, :used_machine_cycles => @nr_machine_cycles}
   end
 end

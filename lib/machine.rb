@@ -39,7 +39,7 @@ class Machine
     while @state != ACCEPT_STATE
       execute_cycle(cycles)
     end
-    @tape.to_a
+    {:tape => @tape.to_a, :used_cycles_for_execution => cycles.used_cycles_for_execution}
   end
 
   class << self

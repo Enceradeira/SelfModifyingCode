@@ -15,4 +15,8 @@ class MachineCycles
       raise MachineCyclesPerExecutionExceeded.new
     end
   end
+
+  def used_cycles_for_execution
+    @cycles_per_execution.used_machine_cycles
+  end
 end

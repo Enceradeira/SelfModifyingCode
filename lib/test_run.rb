@@ -15,7 +15,7 @@ class TestRun
   end
 
   def nr_machine_cycles
-    @nr_machine_cycles ||= @test_results.reduce(0) { |sum, r| sum + r[:nr_machine_cycles] }
+    @nr_machine_cycles ||= @test_results.reduce(0) { |sum, r| sum + r[:used_machine_cycles] }
   end
 
   public
@@ -37,10 +37,10 @@ class TestRun
       return true
     end
 
-    # program size
-    if self.program.is_smaller_than?(other_test_run.program)
-      return true
-    end
+    # program size (not implemented yet)
+    #if self.program.is_smaller_than?(other_test_run.program)
+    #  return true
+    #end
 
     # less tape (not implemented yet)
 

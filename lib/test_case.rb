@@ -12,11 +12,13 @@ class TestCase
   def passes_for?(program, resources)
     machine = Machine.new(@description.input, program, resources)
     begin
-      result_tape = machine.execute
+      result = machine.execute
+      used_cycles_for_execution = result[:used_cycles_for_execution]
+      result_tape = result[:tape]
     rescue RejectedError, SyntaxError, MachineCyclesPerExecutionExceeded
-      return false
+      return {:is_ok => false, :used_machine_cycles => resources.machine_cycles_per_execution}
     end
-    result_tape == @description.expected_output
+    {:is_ok => result_tape == @description.expected_output, :used_machine_cycles => used_cycles_for_execution}
   end
 
   def input
