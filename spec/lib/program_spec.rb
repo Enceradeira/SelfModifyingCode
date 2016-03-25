@@ -99,4 +99,12 @@ describe Program do
       it { expect(program.to_source).to eq(source) }
     end
   end
+
+  describe 'is_smaller_than?' do
+    let(:small_program) { Program.compile %w(,->,r,continue) }
+    let(:large_program) { Program.compile %w(init,0->,r,undecided init,1->,r,true) }
+
+    it { expect(small_program.is_smaller_than?(large_program)).to be_truthy }
+    it { expect(large_program.is_smaller_than?(small_program)).to be_falsey }
+  end
 end

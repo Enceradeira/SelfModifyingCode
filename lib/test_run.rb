@@ -38,9 +38,9 @@ class TestRun
     end
 
     # program size (not implemented yet)
-    #if self.program.is_smaller_than?(other_test_run.program)
-    #  return true
-    #end
+    if self.program.is_smaller_than?(other_test_run.program)
+      return true
+    end
 
     # less tape (not implemented yet)
 

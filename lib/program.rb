@@ -30,6 +30,11 @@ class Program
     end
   end
 
+  protected
+  def size
+    @transitions.count
+  end
+
   public
   class << self
     def compile(source)
@@ -102,5 +107,9 @@ class Program
       transition = kv[1]
       "#{state_input[0]},#{state_input[1]}->#{transition.new_symbol},#{transition.direction},#{transition.new_state}"
     end
+  end
+
+  def is_smaller_than?(other_program)
+    self.size < other_program.size
   end
 end
