@@ -31,10 +31,6 @@ class Program
   end
 
   protected
-  def size
-    @transitions.count
-  end
-
   public
   class << self
     def compile(source)
@@ -63,6 +59,10 @@ class Program
       end)
       Program.new(table)
     end
+  end
+
+  def size
+    @table.rows.count
   end
 
   def mutate(symbols)

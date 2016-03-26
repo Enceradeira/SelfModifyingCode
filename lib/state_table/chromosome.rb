@@ -72,5 +72,9 @@ class Chromosome
     Chromosome.new(nr_rows_gene, rows_genes, nr_state_gene, vocabulary)
   end
 
+  def get_description
+    "nr_rows: #{@nr_rows_gene.value} nr_states: #{@nr_states_gene.value}"
+  end
+
 
 end

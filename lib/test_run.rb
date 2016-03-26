@@ -19,6 +19,11 @@ class TestRun
   end
 
   public
+
+  def get_description
+    "nr_ok: #{self.nr_ok}\tnr_cycles: #{self.nr_machine_cycles}\tsize: #{self.program.size}"
+  end
+
   def all_tests_ok?
     self.nr_ok == @test_cases.count
   end
