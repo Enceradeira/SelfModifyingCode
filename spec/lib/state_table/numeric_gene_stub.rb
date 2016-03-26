@@ -10,9 +10,13 @@ class NumericGeneStub < Struct.new(
     NumericGeneStub.new(self.mutated_value, self.mutated_value)
   end
 
+  def decode
+    self.value
+  end
+
   def ==(other)
     self.class == other.class &&
-        self.value==other.value &&
+        self.value==other.decode &&
         self.mutated_value==other.mutated_value
   end
 

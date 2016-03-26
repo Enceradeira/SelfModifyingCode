@@ -6,13 +6,13 @@ describe NumericGene do
   let(:nr_tested_examples) { 100 }
   let(:gene) { NumericGene.new }
 
-  describe 'value' do
-    it { expect(gene.value).to eq(0) }
+  describe 'decode' do
+    it { expect(gene.decode).to eq(0) }
   end
 
   describe 'create' do
-    it { expect(NumericGene.create(1).value).to eq(1) }
-    it { expect(NumericGene.create(6).value).to eq(6) }
+    it { expect(NumericGene.create(1).decode).to eq(1) }
+    it { expect(NumericGene.create(6).decode).to eq(6) }
   end
 
   describe 'mutate' do
@@ -20,7 +20,7 @@ describe NumericGene do
       values = nr_tested_examples.times.map do
         mutation1 = gene.mutate
         mutation2 = mutation1.mutate
-        {:mutation1 => mutation1.value, :mutation2 => mutation2.value}
+        {:mutation1 => mutation1.decode, :mutation2 => mutation2.decode}
       end
 
       # e.g 0001 ^ 0101 = 0100 (xor) which tells which bit has been set between mutation1 and mutation2
@@ -33,7 +33,7 @@ describe NumericGene do
       expect(all_diff_by_one_bit).to be_truthy
     end
     it 'mutates by a random value' do
-      values = nr_tested_examples.times.map { gene.mutate.value }.uniq
+      values = nr_tested_examples.times.map { gene.mutate.decode }.uniq
       expect(values.count).to be > 1
     end
   end

@@ -6,7 +6,7 @@ require_relative 'vocabulary'
 class Chromosome
   private
   def initialize(nr_rows_gene, rows_genes, nr_states_gene, vocabulary)
-    nr_rows_value = nr_rows_gene.value
+    nr_rows_value = nr_rows_gene.decode
     rows_genes_count = rows_genes.count
     if nr_rows_value != rows_genes_count
       raise StandardError.new "nr_rows_gene was #{nr_rows_value} but rows_genes had #{rows_genes_count} elements"
@@ -18,7 +18,7 @@ class Chromosome
   end
 
   def mutate_rows(nr_rows_gene, rows_genes)
-    nr_rows_diff = nr_rows_gene.value - @nr_rows_gene.value
+    nr_rows_diff = nr_rows_gene.decode - @nr_rows_gene.decode
     if nr_rows_diff > 0
       nr_rows_diff.times.each do
         if block_given?
@@ -45,8 +45,8 @@ class Chromosome
     def create(symbols)
       nr_rows_gene=NumericGene.new
       nr_states_gene=NumericGene.new
-      vocabulary = Vocabulary.new(nr_states_gene.value, symbols)
-      rows = nr_rows_gene.value.times.map { |_| StateTableRowGene.create(vocabulary) }
+      vocabulary = Vocabulary.new(nr_states_gene.decode, symbols)
+      rows = nr_rows_gene.decode.times.map { |_| StateTableRowGene.create(vocabulary) }
       Chromosome.new(nr_rows_gene, rows, nr_states_gene, vocabulary )
     end
   end
@@ -67,13 +67,13 @@ class Chromosome
     rows_genes = mutations.drop(2)
 
     mutate_rows(nr_rows_gene, rows_genes)
-    vocabulary = @vocabulary.mutate(nr_state_gene.value)
+    vocabulary = @vocabulary.mutate(nr_state_gene.decode)
 
     Chromosome.new(nr_rows_gene, rows_genes, nr_state_gene, vocabulary)
   end
 
   def get_description
-    "nr_rows: #{@nr_rows_gene.value} nr_states: #{@nr_states_gene.value}"
+    "nr_rows: #{@nr_rows_gene.decode} nr_states: #{@nr_states_gene.decode}"
   end
 
 

@@ -19,7 +19,7 @@ class StateTableRowGeneStub
 
   def ==(other)
     self.class == other.class &&
-        self.value==other.value
+        self.value==other.decode
   end
 
   alias_method :eql?, :==

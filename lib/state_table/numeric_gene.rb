@@ -21,7 +21,7 @@ class NumericGene
     end
   end
 
-  def value
+  def decode
     power = 0
     value = 0
     @bits.each do |i|
